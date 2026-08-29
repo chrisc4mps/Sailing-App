@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -110,6 +110,30 @@
         </div>
 
         <div class="form-row">
+          <label for="f-role">My role</label>
+          <select id="f-role" required>
+            <option value="Crew">Crew</option>
+            <option value="Watch Leader">Watch Leader</option>
+            <option value="Mate">Mate</option>
+            <option value="Skipper">Skipper</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="f-skipper">Skipper</label>
+          <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith">
+        </div>
+
+        <div class="form-row">
+          <label for="f-crew-input">Crew</label>
+          <div class="chip-input">
+            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +">
+            <button type="button" id="add-crew-btn" class="chip-add-btn">+</button>
+          </div>
+          <div id="crew-chips" class="chips"></div>
+        </div>
+
+        <div class="form-row">
           <label for="f-notes">Notes <span class="optional">(optional)</span></label>
           <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..."></textarea>
         </div>
@@ -133,30 +157,6 @@
         <div class="form-row">
           <label for="f-yacht-class">Yacht class / type <span class="optional">(optional)</span></label>
           <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349">
-        </div>
-
-        <div class="form-row">
-          <label for="f-skipper">Skipper</label>
-          <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith">
-        </div>
-
-        <div class="form-row">
-          <label for="f-crew-input">Crew</label>
-          <div class="chip-input">
-            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +">
-            <button type="button" id="add-crew-btn" class="chip-add-btn">+</button>
-          </div>
-          <div id="crew-chips" class="chips"></div>
-        </div>
-
-        <div class="form-row">
-          <label for="f-role">My role</label>
-          <select id="f-role" required>
-            <option value="Crew">Crew</option>
-            <option value="Watch Leader">Watch Leader</option>
-            <option value="Mate">Mate</option>
-            <option value="Skipper">Skipper</option>
-          </select>
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
@@ -191,6 +191,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=7"></script>
+  <script type="module" src="app.js?v=8"></script>
 </body>
 </html>
