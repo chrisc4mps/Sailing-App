@@ -10,22 +10,26 @@
 
   <!-- Auth screen -->
   <section id="view-auth" class="screen">
-    <div class="auth-box">
+    <header class="app-header">
       <h1>⛵ Sailing Logbook</h1>
-      <p class="tagline">Sign in with your email — no password needed.</p>
+    </header>
+    <div class="auth-body">
+      <div class="auth-box">
+        <p class="tagline">Sign in with your email — no password needed.</p>
 
-      <form id="login-form">
-        <label for="login-email">Email address</label>
-        <input type="email" id="login-email" inputmode="email" autocomplete="email" required placeholder="you@example.com">
-        <button type="submit" class="primary-btn">Send magic link</button>
-      </form>
+        <form id="login-form">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" inputmode="email" autocomplete="email" required placeholder="you@example.com">
+          <button type="submit" class="primary-btn">Send magic link</button>
+        </form>
 
-      <div id="check-email" class="info-box" hidden>
-        <p>Check your inbox — we've sent a sign-in link to <strong id="sent-to-email"></strong>.</p>
-        <button type="button" id="use-different-email" class="link-button">Use a different email</button>
+        <div id="check-email" class="info-box" hidden>
+          <p>Check your inbox — we've sent a sign-in link to <strong id="sent-to-email"></strong>.</p>
+          <button type="button" id="use-different-email" class="link-button">Use a different email</button>
+        </div>
+
+        <p id="auth-error" class="error-text" hidden></p>
       </div>
-
-      <p id="auth-error" class="error-text" hidden></p>
     </div>
   </section>
 
@@ -35,7 +39,10 @@
     <!-- Logbook (list) screen -->
     <section id="view-logbook" class="app-screen">
       <header class="app-header">
-        <h1>Sailing Logbook</h1>
+        <div>
+          <h1>Sailing Logbook</h1>
+          <button type="button" id="profile-link" class="profile-link"></button>
+        </div>
         <button type="button" id="sign-out" class="link-button">Sign out</button>
       </header>
 
@@ -170,6 +177,27 @@
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
+      </form>
+    </section>
+
+    <!-- Profile screen -->
+    <section id="view-profile" class="app-screen" hidden>
+      <header class="app-header">
+        <button type="button" id="profile-back" class="link-button">Back</button>
+        <h1>Profile</h1>
+      </header>
+
+      <form id="profile-form">
+        <div class="form-row">
+          <label for="profile-email">Email</label>
+          <input type="email" id="profile-email" disabled>
+        </div>
+        <div class="form-row">
+          <label for="profile-name">Full name</label>
+          <input type="text" id="profile-name" placeholder="e.g. Chris Camps">
+        </div>
+        <button type="submit" class="primary-btn">Save</button>
+        <p id="profile-saved" class="info-box" hidden>Saved.</p>
       </form>
     </section>
 

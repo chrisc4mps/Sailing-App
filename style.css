@@ -3,7 +3,7 @@
   --navy-muted: #3b4a66;
   --ochre: #cc7722;
   --ochre-dark: #a8611b;
-  --ochre-light: #faf1e2;
+  --ochre-light: #f5e2bd;
   --text: #000000;
   --border: #e4cfa8;
   --danger: #b23b3b;
@@ -51,6 +51,20 @@ input, select, textarea {
 /* ---- Auth screen ---- */
 #view-auth {
   display: flex;
+  flex-direction: column;
+}
+
+#view-auth .app-header {
+  justify-content: center;
+}
+
+#view-auth .app-header h1 {
+  font-size: 1.4rem;
+}
+
+.auth-body {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
@@ -64,11 +78,6 @@ input, select, textarea {
   border-radius: 14px;
   padding: 2rem 1.5rem;
   text-align: center;
-}
-
-.auth-box h1 {
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
 }
 
 .tagline {
@@ -143,6 +152,17 @@ input, select, textarea {
   padding: 0.4rem;
 }
 
+.profile-link {
+  background: none;
+  border: none;
+  color: var(--navy);
+  opacity: 0.8;
+  font-size: 0.85rem;
+  padding: 0;
+  margin-top: 0.1rem;
+  text-decoration: underline;
+}
+
 /* ---- Totals ---- */
 .totals-grid {
   display: grid;
@@ -185,12 +205,39 @@ input, select, textarea {
   flex: 1;
 }
 
+.log-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.log-item-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 88px;
+  display: flex;
+}
+
+.delete-swipe-btn {
+  flex: 1;
+  background: var(--danger);
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
 .log-card {
+  position: relative;
   background: white;
   border: 1px solid var(--border);
   border-left: 4px solid var(--ochre);
   border-radius: 10px;
   padding: 0.9rem 1rem;
+  touch-action: pan-y;
+  user-select: none;
 }
 
 .log-card-top {
