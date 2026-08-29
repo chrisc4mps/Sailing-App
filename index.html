@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -90,12 +90,12 @@
 
         <div class="form-row">
           <label for="f-from">From</label>
-          <input type="text" id="f-from" required placeholder="e.g. Lymington" autocomplete="off">
+          <input type="search" id="f-from" required placeholder="e.g. Lymington" autocomplete="off">
         </div>
 
         <div class="form-row">
           <label for="f-to">To</label>
-          <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
+          <input type="search" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
         </div>
 
         <div class="form-row two-col">
@@ -122,7 +122,7 @@
         <div class="form-row">
           <label for="f-skipper">Skipper</label>
           <div class="autocomplete">
-            <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith" autocomplete="off">
+            <input type="search" id="f-skipper" required placeholder="e.g. Jane Smith" autocomplete="off">
             <ul id="skipper-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
@@ -130,7 +130,7 @@
         <div class="form-row">
           <label for="f-crew-input">Crew</label>
           <div class="chip-input">
-            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +" autocomplete="off">
+            <input type="search" id="f-crew-input" placeholder="Add a crew name and press +" autocomplete="off">
             <button type="button" id="add-crew-btn" class="chip-add-btn">+</button>
           </div>
           <div id="crew-chips" class="chips"></div>
@@ -155,14 +155,14 @@
         <div class="form-row">
           <label for="f-yacht-name">Yacht name</label>
           <div class="autocomplete">
-            <input type="text" id="f-yacht-name" required placeholder="e.g. Moonshadow" autocomplete="off">
+            <input type="search" id="f-yacht-name" required placeholder="e.g. Moonshadow" autocomplete="off">
             <ul id="yacht-name-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
 
         <div class="form-row">
           <label for="f-yacht-class">Yacht class / type <span class="optional">(optional)</span></label>
-          <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349" autocomplete="off">
+          <input type="search" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349" autocomplete="off">
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
@@ -183,11 +183,11 @@
         </div>
         <div class="form-row">
           <label for="profile-name">Full name</label>
-          <input type="text" id="profile-name" placeholder="e.g. Chris Camps" autocomplete="off">
+          <input type="search" id="profile-name" placeholder="e.g. Chris Camps" autocomplete="off">
         </div>
         <div class="form-row">
           <label for="profile-home-port">Home port <span class="optional">(optional)</span></label>
-          <input type="text" id="profile-home-port" placeholder="e.g. Lymington" autocomplete="off">
+          <input type="search" id="profile-home-port" placeholder="e.g. Lymington" autocomplete="off">
         </div>
         <button type="submit" class="primary-btn">Save</button>
         <p id="profile-saved" class="info-box" hidden>Saved.</p>
@@ -197,6 +197,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=11"></script>
+  <script type="module" src="app.js?v=12"></script>
 </body>
 </html>
