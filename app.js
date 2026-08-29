@@ -126,13 +126,55 @@ function openShareOverlay(url, title, message) {
   shareOverlay.hidden = false;
 }
 
-shareBtn.addEventListener("click", () => {
-  const url = window.location.origin + window.location.pathname;
-  openShareOverlay(url, "Share this app", "Scan this to open the Sailing Logbook.");
-});
-
 shareCloseBtn.addEventListener("click", () => {
   shareOverlay.hidden = true;
+});
+
+// Lets the person choose between the device's native share sheet
+// (WhatsApp, Messages, AirDrop, etc.) and a QR code for someone standing
+// right next to them, rather than the app guessing which they want.
+const shareChoiceOverlay = document.getElementById("share-choice-overlay");
+const shareChoiceTitle = document.getElementById("share-choice-title");
+const shareViaBtn = document.getElementById("share-via-btn");
+const shareQrBtn = document.getElementById("share-qr-btn");
+const shareChoiceCancelBtn = document.getElementById("share-choice-cancel-btn");
+let pendingShare = null;
+
+function openShareChoice(url, title, message) {
+  pendingShare = { url, title, message };
+  shareChoiceTitle.textContent = title;
+  shareChoiceOverlay.hidden = false;
+}
+
+shareChoiceCancelBtn.addEventListener("click", () => {
+  shareChoiceOverlay.hidden = true;
+});
+
+shareViaBtn.addEventListener("click", async () => {
+  shareChoiceOverlay.hidden = true;
+  if (!pendingShare) return;
+  const { url, title, message } = pendingShare;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text: message, url });
+    } catch (err) {
+      // User cancelled the share sheet - nothing to do.
+    }
+  } else {
+    alert("Sharing isn't supported in this browser. Try “Show QR code” instead.");
+  }
+});
+
+shareQrBtn.addEventListener("click", () => {
+  shareChoiceOverlay.hidden = true;
+  if (!pendingShare) return;
+  openShareOverlay(pendingShare.url, pendingShare.title, pendingShare.message);
+});
+
+shareBtn.addEventListener("click", () => {
+  const url = window.location.origin + window.location.pathname;
+  openShareChoice(url, "Share this app", "Scan this to open the Sailing Logbook.");
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
@@ -324,7 +366,7 @@ function openEntry(entry) {
 
 const shareLogBtn = document.getElementById("share-log-btn");
 
-shareLogBtn.addEventListener("click", async () => {
+shareLogBtn.addEventListener("click", () => {
   const payload = {
     date: document.getElementById("f-date").value || null,
     start_time: document.getElementById("f-start-time").value || null,
@@ -344,17 +386,9 @@ shareLogBtn.addEventListener("click", async () => {
   };
 
   const url = `${window.location.origin}${window.location.pathname}?shared=${encodeShareData(payload)}`;
-  const shareText = `${payload.from || "?"} → ${payload.to || "?"} — open in Sailing Logbook to add this to your own log.`;
+  const message = `${payload.from || "?"} → ${payload.to || "?"} — open in Sailing Logbook to add this to your own log.`;
 
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: "Sailing Logbook entry", text: shareText, url });
-    } catch (err) {
-      // User cancelled the share sheet - nothing to do.
-    }
-  } else {
-    openShareOverlay(url, "Share this log", shareText);
-  }
+  openShareChoice(url, "Share this log", message);
 });
 
 function applyPendingSharedLogIfAny() {

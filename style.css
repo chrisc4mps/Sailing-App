@@ -491,6 +491,14 @@ input:focus, select:focus, textarea:focus {
   margin: 0 0 0.4rem;
 }
 
+.overlay-box .primary-btn {
+  margin-top: 0.9rem;
+}
+
+.overlay-box .link-button {
+  margin-top: 0.5rem;
+}
+
 .qr-code {
   display: flex;
   justify-content: center;
