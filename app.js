@@ -588,7 +588,14 @@ formBackBtn.addEventListener("click", () => {
 
 function openEntry(entry) {
   editingId = entry.id;
-  document.getElementById("gpx-imported-label").hidden = true;
+  const importedLabel = document.getElementById("gpx-imported-label");
+  if (entry.gpx_filename) {
+    importedLabel.textContent = `Imported from: ${entry.gpx_filename}`;
+    importedLabel.hidden = false;
+  } else {
+    importedLabel.hidden = true;
+  }
+  document.getElementById("f-gpx-filename").value = entry.gpx_filename || "";
   document.getElementById("share-log-btn").hidden = false;
   document.getElementById("f-date").value = entry.date;
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
@@ -690,6 +697,7 @@ entryForm.addEventListener("submit", async (e) => {
     start_time: document.getElementById("f-start-time").value || null,
     end_time: document.getElementById("f-end-time").value || null,
     trip_name: document.getElementById("f-trip-name").value.trim() || null,
+    gpx_filename: document.getElementById("f-gpx-filename").value || null,
     type: document.getElementById("f-type").value,
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
@@ -849,6 +857,7 @@ gpxFileInput.addEventListener("change", async () => {
     const importedLabel = document.getElementById("gpx-imported-label");
     importedLabel.textContent = `Imported from: ${file.name}`;
     importedLabel.hidden = false;
+    document.getElementById("f-gpx-filename").value = file.name;
 
     const fromInput = document.getElementById("f-from");
     const toInput = document.getElementById("f-to");

@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=37">
+  <link rel="stylesheet" href="style.css?v=38">
 </head>
 <body>
 
@@ -101,6 +101,7 @@
         <div class="gpx-import">
           <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
           <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
+          <input type="hidden" id="f-gpx-filename">
           <p id="gpx-imported-label" class="gpx-imported-label" hidden></p>
         </div>
 
@@ -297,6 +298,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=37"></script>
+  <script type="module" src="app.js?v=38"></script>
 </body>
 </html>
