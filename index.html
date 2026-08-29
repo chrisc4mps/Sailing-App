@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 
@@ -82,30 +82,30 @@
         <h1 id="form-title">Add Log</h1>
       </header>
 
-      <form id="entry-form">
+      <form id="entry-form" autocomplete="off">
         <div class="form-row">
           <label for="f-date">Date</label>
-          <input type="date" id="f-date" required>
+          <input type="date" id="f-date" required autocomplete="off">
         </div>
 
         <div class="form-row">
           <label for="f-from">From</label>
-          <input type="text" id="f-from" required placeholder="e.g. Lymington">
+          <input type="text" id="f-from" required placeholder="e.g. Lymington" autocomplete="off">
         </div>
 
         <div class="form-row">
           <label for="f-to">To</label>
-          <input type="text" id="f-to" required placeholder="e.g. Cherbourg">
+          <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
         </div>
 
         <div class="form-row two-col">
           <div>
             <label for="f-distance">Distance (nm)</label>
-            <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62">
+            <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62" autocomplete="off">
           </div>
           <div>
             <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
-            <input type="number" id="f-night-hours" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4">
+            <input type="number" id="f-night-hours" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4" autocomplete="off">
           </div>
         </div>
 
@@ -130,7 +130,7 @@
         <div class="form-row">
           <label for="f-crew-input">Crew</label>
           <div class="chip-input">
-            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +">
+            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +" autocomplete="off">
             <button type="button" id="add-crew-btn" class="chip-add-btn">+</button>
           </div>
           <div id="crew-chips" class="chips"></div>
@@ -138,7 +138,7 @@
 
         <div class="form-row">
           <label for="f-notes">Notes <span class="optional">(optional)</span></label>
-          <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..."></textarea>
+          <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..." autocomplete="off"></textarea>
         </div>
 
         <h2 class="form-section-heading">More details</h2>
@@ -162,7 +162,7 @@
 
         <div class="form-row">
           <label for="f-yacht-class">Yacht class / type <span class="optional">(optional)</span></label>
-          <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349">
+          <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349" autocomplete="off">
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
@@ -176,18 +176,18 @@
         <h1>Profile</h1>
       </header>
 
-      <form id="profile-form">
+      <form id="profile-form" autocomplete="off">
         <div class="form-row">
           <label for="profile-email">Email</label>
-          <input type="email" id="profile-email" disabled>
+          <input type="email" id="profile-email" disabled autocomplete="off">
         </div>
         <div class="form-row">
           <label for="profile-name">Full name</label>
-          <input type="text" id="profile-name" placeholder="e.g. Chris Camps">
+          <input type="text" id="profile-name" placeholder="e.g. Chris Camps" autocomplete="off">
         </div>
         <div class="form-row">
           <label for="profile-home-port">Home port <span class="optional">(optional)</span></label>
-          <input type="text" id="profile-home-port" placeholder="e.g. Lymington">
+          <input type="text" id="profile-home-port" placeholder="e.g. Lymington" autocomplete="off">
         </div>
         <button type="submit" class="primary-btn">Save</button>
         <p id="profile-saved" class="info-box" hidden>Saved.</p>
@@ -197,6 +197,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=10"></script>
+  <script type="module" src="app.js?v=11"></script>
 </body>
 </html>
