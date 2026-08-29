@@ -1,11 +1,10 @@
 :root {
   --navy: #0a1f44;
   --navy-muted: #3b4a66;
-  --ochre: #cc7722;
-  --ochre-dark: #a8611b;
-  --ochre-light: #f5e2bd;
+  --navy-dark: #061530;
+  --bg: #ffffff;
   --text: #000000;
-  --border: #e4cfa8;
+  --border: #d9dee5;
   --danger: #b23b3b;
 }
 
@@ -24,7 +23,7 @@ html, body {
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--ochre-light);
+  background: var(--bg);
   color: var(--text);
   font-size: 16px;
 }
@@ -73,7 +72,7 @@ input, select, textarea {
 .auth-box {
   width: 100%;
   max-width: 400px;
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 2rem 1.5rem;
@@ -130,7 +129,7 @@ input, select, textarea {
 }
 
 .app-header {
-  background: var(--ochre);
+  background: var(--bg);
   color: var(--navy);
   padding: 1rem 1rem;
   display: flex;
@@ -140,6 +139,7 @@ input, select, textarea {
   position: sticky;
   top: 0;
   z-index: 5;
+  border-bottom: 1px solid var(--border);
 }
 
 .app-header h1 {
@@ -172,7 +172,7 @@ input, select, textarea {
 }
 
 .stat-tile {
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.9rem;
@@ -231,9 +231,9 @@ input, select, textarea {
 
 .log-card {
   position: relative;
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--ochre);
+  border-left: 4px solid var(--navy);
   border-radius: 10px;
   padding: 0.9rem 1rem;
   touch-action: pan-y;
@@ -272,13 +272,13 @@ input, select, textarea {
   left: 0;
   right: 0;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--ochre-light) 60%, transparent);
+  background: linear-gradient(to top, var(--bg) 60%, transparent);
 }
 
 .primary-btn {
   width: 100%;
-  background: var(--ochre);
-  color: var(--navy);
+  background: var(--navy);
+  color: white;
   border: none;
   font-weight: 700;
   font-size: 1.1rem;
@@ -288,7 +288,7 @@ input, select, textarea {
 }
 
 .primary-btn:active {
-  background: var(--ochre-dark);
+  background: var(--navy-dark);
 }
 
 /* ---- Entry form ---- */
@@ -331,7 +331,7 @@ input, select, textarea {
   border-radius: 8px;
   padding: 0.7rem 0.75rem;
   font-size: 1.05rem;
-  background: white;
+  background: var(--bg);
   resize: vertical;
   min-height: 48px;
 }
@@ -341,7 +341,7 @@ select {
 }
 
 input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--ochre);
+  outline: 2px solid var(--navy);
   outline-offset: 1px;
 }
 
@@ -355,8 +355,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .chip-add-btn {
-  background: var(--ochre);
-  color: var(--navy);
+  background: var(--navy);
+  color: white;
   border: none;
   border-radius: 8px;
   min-width: 48px;
@@ -372,7 +372,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .chip {
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.4rem 0.5rem 0.4rem 0.9rem;
