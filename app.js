@@ -905,7 +905,7 @@ function renderLogList(entries) {
     lastTripName = entry.trip_name || null;
 
     const li = document.createElement("li");
-    li.className = "log-item";
+    li.className = entry.trip_name ? "log-item log-item--grouped" : "log-item";
 
     const actions = document.createElement("div");
     actions.className = "log-item-actions";

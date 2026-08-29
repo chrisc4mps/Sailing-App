@@ -235,6 +235,10 @@ input, select, textarea {
   overflow: hidden;
 }
 
+.log-item--grouped {
+  margin-left: 1rem;
+}
+
 .log-item-actions {
   position: absolute;
   top: 0;
