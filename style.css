@@ -396,10 +396,39 @@ input, select, textarea {
   font-weight: 600;
 }
 
-.qual-date {
-  font-size: 0.8rem;
+.qual-date-btn {
+  background: none;
+  border: none;
   color: var(--navy-muted);
-  margin-top: 0.1rem;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: 0.15rem;
+  text-align: left;
+}
+
+.qual-date-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.qual-date-edit-row input[type="month"] {
+  min-height: 38px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.qual-date-save-btn {
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  min-width: 38px;
+  min-height: 38px;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .qual-actions {

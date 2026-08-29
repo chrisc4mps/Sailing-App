@@ -262,6 +262,7 @@ const qualStatus = document.getElementById("qual-status");
 let currentUserId = null;
 let currentQualifications = [];
 let pendingAttachId = null;
+let editingQualDateId = null;
 
 function formatQualDate(monthValue) {
   if (!monthValue) return "";
@@ -270,9 +271,19 @@ function formatQualDate(monthValue) {
 }
 
 function renderQualifications() {
-  qualificationsList.innerHTML = currentQualifications
+  // Newest date first; undated entries (empty string sorts before any
+  // real "YYYY-MM" value) fall to the bottom.
+  const sorted = [...currentQualifications].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+
+  qualificationsList.innerHTML = sorted
     .map((q) => {
-      const dateLabel = formatQualDate(q.date);
+      const dateControl =
+        editingQualDateId === q.id
+          ? `<div class="qual-date-edit-row">
+               <input type="month" class="qual-date-input-inline" data-id="${q.id}" value="${q.date || ""}">
+               <button type="button" class="qual-date-save-btn" data-id="${q.id}">✓</button>
+             </div>`
+          : `<button type="button" class="qual-date-btn" data-id="${q.id}">${formatQualDate(q.date) || "Add date"}</button>`;
       const fileAction = q.path
         ? `<button type="button" class="qual-link-btn" data-path="${escapeHtml(q.path)}">View</button>`
         : `<button type="button" class="qual-attach-btn" data-id="${q.id}">Attach file</button>`;
@@ -280,7 +291,7 @@ function renderQualifications() {
         <li class="qual-item">
           <div class="qual-info">
             <span class="qual-name">${escapeHtml(q.name)}</span>
-            ${dateLabel ? `<span class="qual-date">${escapeHtml(dateLabel)}</span>` : ""}
+            ${dateControl}
           </div>
           <div class="qual-actions">
             ${fileAction}
@@ -289,6 +300,11 @@ function renderQualifications() {
         </li>`;
     })
     .join("");
+
+  if (editingQualDateId) {
+    const input = qualificationsList.querySelector(`.qual-date-input-inline[data-id="${editingQualDateId}"]`);
+    if (input) input.focus();
+  }
 }
 
 qualAddBtn.addEventListener("click", async () => {
@@ -358,6 +374,32 @@ qualFileInput.addEventListener("change", async () => {
 });
 
 qualificationsList.addEventListener("click", async (e) => {
+  const dateBtn = e.target.closest(".qual-date-btn");
+  if (dateBtn) {
+    editingQualDateId = dateBtn.dataset.id;
+    renderQualifications();
+    return;
+  }
+
+  const saveDateBtn = e.target.closest(".qual-date-save-btn");
+  if (saveDateBtn) {
+    const id = saveDateBtn.dataset.id;
+    const input = qualificationsList.querySelector(`.qual-date-input-inline[data-id="${id}"]`);
+    const newDate = input.value || null;
+
+    const updatedQualifications = currentQualifications.map((q) => (q.id === id ? { ...q, date: newDate } : q));
+    const { error } = await supabase.auth.updateUser({ data: { qualifications: updatedQualifications } });
+    editingQualDateId = null;
+
+    if (error) {
+      alert(`Could not save date: ${error.message}`);
+    } else {
+      currentQualifications = updatedQualifications;
+    }
+    renderQualifications();
+    return;
+  }
+
   const attachBtn = e.target.closest(".qual-attach-btn");
   if (attachBtn) {
     pendingAttachId = attachBtn.dataset.id;
