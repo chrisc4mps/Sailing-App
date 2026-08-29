@@ -127,6 +127,7 @@ const profileForm = document.getElementById("profile-form");
 const profileEmailInput = document.getElementById("profile-email");
 const profileNameInput = document.getElementById("profile-name");
 const profileHomePortInput = document.getElementById("profile-home-port");
+const profileRegionInput = document.getElementById("profile-region");
 const profileSaved = document.getElementById("profile-saved");
 
 function updateProfileDisplay(user) {
@@ -144,6 +145,7 @@ function updateProfileDisplay(user) {
   profileEmailInput.value = user.email;
   profileNameInput.value = fullName || "";
   profileHomePortInput.value = user.user_metadata?.home_port || "";
+  profileRegionInput.value = user.user_metadata?.region || "";
 }
 
 profileLink.addEventListener("click", showProfile);
@@ -157,6 +159,7 @@ profileForm.addEventListener("submit", async (e) => {
     data: {
       full_name: profileNameInput.value.trim(),
       home_port: profileHomePortInput.value.trim(),
+      region: profileRegionInput.value.trim(),
     },
   });
 
@@ -215,6 +218,20 @@ const addLogBtn = document.getElementById("add-log-btn");
 const formBackBtn = document.getElementById("form-back");
 let editingId = null;
 
+const FT_PER_M = 3.28084;
+const lengthFtInput = document.getElementById("f-length-ft");
+const lengthMInput = document.getElementById("f-length-m");
+
+lengthFtInput.addEventListener("input", () => {
+  const ft = parseFloat(lengthFtInput.value);
+  lengthMInput.value = Number.isFinite(ft) ? (ft / FT_PER_M).toFixed(2) : "";
+});
+
+lengthMInput.addEventListener("input", () => {
+  const m = parseFloat(lengthMInput.value);
+  lengthFtInput.value = Number.isFinite(m) ? (m * FT_PER_M).toFixed(1) : "";
+});
+
 function calculateDuration() {
   const startVal = document.getElementById("f-start-time").value;
   const endVal = document.getElementById("f-end-time").value;
@@ -260,7 +277,13 @@ function openEntry(entry) {
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
   document.getElementById("f-yacht-name").value = entry.yacht_name;
-  document.getElementById("f-yacht-class").value = entry.yacht_class || "";
+  if (entry.length_m != null) {
+    document.getElementById("f-length-m").value = entry.length_m;
+    document.getElementById("f-length-ft").value = (entry.length_m * FT_PER_M).toFixed(1);
+  } else {
+    document.getElementById("f-length-m").value = "";
+    document.getElementById("f-length-ft").value = "";
+  }
   document.getElementById("f-skipper").value = entry.skipper;
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
@@ -290,7 +313,7 @@ entryForm.addEventListener("submit", async (e) => {
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
     yacht_name: document.getElementById("f-yacht-name").value.trim(),
-    yacht_class: document.getElementById("f-yacht-class").value.trim() || null,
+    length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
     skipper: document.getElementById("f-skipper").value.trim(),
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -185,9 +185,15 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <label for="f-yacht-class">Yacht class / type <span class="optional">(optional)</span></label>
-          <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349" autocomplete="off">
+        <div class="form-row two-col">
+          <div>
+            <label for="f-length-ft">Length (ft) <span class="optional">(optional)</span></label>
+            <input type="number" id="f-length-ft" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 35" autocomplete="off">
+          </div>
+          <div>
+            <label for="f-length-m">Length (m) <span class="optional">(optional)</span></label>
+            <input type="number" id="f-length-m" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 10.7" autocomplete="off">
+          </div>
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
@@ -214,6 +220,10 @@
           <label for="profile-home-port">Home port <span class="optional">(optional)</span></label>
           <input type="text" id="profile-home-port" placeholder="e.g. Lymington" autocomplete="off">
         </div>
+        <div class="form-row">
+          <label for="profile-region">Region <span class="optional">(optional)</span></label>
+          <input type="text" id="profile-region" placeholder="e.g. Solent" autocomplete="off">
+        </div>
         <button type="submit" class="primary-btn">Save</button>
         <p id="profile-saved" class="info-box" hidden>Saved.</p>
       </form>
@@ -234,6 +244,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=19"></script>
+  <script type="module" src="app.js?v=20"></script>
 </body>
 </html>
