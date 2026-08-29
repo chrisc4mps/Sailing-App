@@ -287,6 +287,18 @@ async function loadLogs() {
 
   renderLogList(data);
   renderTotals(data);
+  updateAutocompleteLists(data);
+}
+
+const yachtNameList = document.getElementById("yacht-name-list");
+const skipperList = document.getElementById("skipper-list");
+
+function updateAutocompleteLists(entries) {
+  const yachtNames = [...new Set(entries.map((e) => e.yacht_name).filter(Boolean))].sort();
+  const skippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
+
+  yachtNameList.innerHTML = yachtNames.map((name) => `<option value="${escapeHtml(name)}">`).join("");
+  skipperList.innerHTML = skippers.map((name) => `<option value="${escapeHtml(name)}">`).join("");
 }
 
 const SWIPE_OPEN_X = -88;

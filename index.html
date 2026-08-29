@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -121,7 +121,8 @@
 
         <div class="form-row">
           <label for="f-skipper">Skipper</label>
-          <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith">
+          <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith" list="skipper-list">
+          <datalist id="skipper-list"></datalist>
         </div>
 
         <div class="form-row">
@@ -151,7 +152,8 @@
 
         <div class="form-row">
           <label for="f-yacht-name">Yacht name</label>
-          <input type="text" id="f-yacht-name" required placeholder="e.g. Moonshadow">
+          <input type="text" id="f-yacht-name" required placeholder="e.g. Moonshadow" list="yacht-name-list">
+          <datalist id="yacht-name-list"></datalist>
         </div>
 
         <div class="form-row">
@@ -191,6 +193,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=8"></script>
+  <script type="module" src="app.js?v=9"></script>
 </body>
 </html>
