@@ -277,13 +277,8 @@ function openEntry(entry) {
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
   document.getElementById("f-yacht-name").value = entry.yacht_name;
-  if (entry.length_m != null) {
-    document.getElementById("f-length-m").value = Number(entry.length_m).toFixed(1);
-    document.getElementById("f-length-ft").value = (entry.length_m * FT_PER_M).toFixed(1);
-  } else {
-    document.getElementById("f-length-m").value = "";
-    document.getElementById("f-length-ft").value = "";
-  }
+  document.getElementById("f-length-ft").value = entry.length_ft ?? "";
+  document.getElementById("f-length-m").value = entry.length_m ?? "";
   document.getElementById("f-skipper").value = entry.skipper;
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
@@ -313,6 +308,7 @@ entryForm.addEventListener("submit", async (e) => {
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
     yacht_name: document.getElementById("f-yacht-name").value.trim(),
+    length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
     skipper: document.getElementById("f-skipper").value.trim(),
     crew: currentCrew,
@@ -494,23 +490,23 @@ function updateAutocompleteLists(entries) {
   // recently recorded length.
   knownYachtLengths = {};
   for (const e of entries) {
-    if (e.yacht_name && e.length_m != null) {
+    if (e.yacht_name && (e.length_ft != null || e.length_m != null)) {
       const key = e.yacht_name.toLowerCase();
-      if (!(key in knownYachtLengths)) knownYachtLengths[key] = e.length_m;
+      if (!(key in knownYachtLengths)) knownYachtLengths[key] = { ft: e.length_ft, m: e.length_m };
     }
   }
 }
 
 function applyKnownYachtLength(yachtName) {
-  const lengthM = knownYachtLengths[yachtName.toLowerCase()];
-  if (lengthM == null) return;
+  const lengths = knownYachtLengths[yachtName.toLowerCase()];
+  if (!lengths) return;
 
   const ftInput = document.getElementById("f-length-ft");
   const mInput = document.getElementById("f-length-m");
   if (ftInput.value.trim() || mInput.value.trim()) return; // don't overwrite a value already entered
 
-  mInput.value = Number(lengthM).toFixed(1);
-  ftInput.value = (lengthM * FT_PER_M).toFixed(1);
+  if (lengths.ft != null) ftInput.value = lengths.ft;
+  if (lengths.m != null) mInput.value = lengths.m;
 }
 
 function setupAutocomplete(input, listEl, getOptions, onSelect) {

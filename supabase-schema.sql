@@ -12,6 +12,7 @@ create table if not exists public.logs (
   from_location text not null,
   to_location text not null,
   yacht_name text not null,
+  length_ft numeric(4, 1) check (length_ft >= 0),
   length_m numeric(4, 2) check (length_m >= 0),
   skipper text not null,
   crew text[] not null default '{}',
