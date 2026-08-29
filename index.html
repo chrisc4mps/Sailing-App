@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=41">
+  <link rel="stylesheet" href="style.css?v=42">
 </head>
 <body>
 
@@ -95,6 +95,10 @@
       <header class="app-header">
         <button type="button" id="form-back" class="link-button">Cancel</button>
         <h1 id="form-title">Add Log</h1>
+        <div class="header-actions">
+          <button type="button" id="share-log-btn" class="link-button" hidden>Share</button>
+          <button type="submit" form="entry-form" id="save-btn" class="link-button save-link-btn">Save</button>
+        </div>
       </header>
 
       <form id="entry-form" autocomplete="off">
@@ -226,8 +230,6 @@
           </div>
         </div>
 
-        <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
-        <button type="button" class="primary-btn" id="share-log-btn" hidden>Share this log</button>
       </form>
     </section>
 
@@ -301,6 +303,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=41"></script>
+  <script type="module" src="app.js?v=42"></script>
 </body>
 </html>

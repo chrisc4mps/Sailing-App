@@ -324,8 +324,12 @@ input, select, textarea {
   background: var(--navy-dark);
 }
 
-#entry-form #share-log-btn {
-  margin-top: 0.75rem;
+.save-link-btn {
+  font-weight: 700;
+}
+
+.save-link-btn:disabled {
+  opacity: 0.4;
 }
 
 /* ---- Entry form ---- */
