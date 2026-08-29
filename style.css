@@ -482,6 +482,22 @@ input, select, textarea {
   margin-bottom: 0.5rem;
 }
 
+.danger-zone {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.danger-link-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  text-decoration: underline;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+}
+
 .form-row label {
   font-size: 0.9rem;
   font-weight: 600;

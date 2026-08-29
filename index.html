@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=34">
+  <link rel="stylesheet" href="style.css?v=35">
 </head>
 <body>
 
@@ -254,6 +254,10 @@
         <input type="file" id="qual-file-input" accept="image/*,application/pdf" hidden>
         <p id="qual-status" class="info-box" hidden></p>
       </div>
+
+      <div class="danger-zone">
+        <button type="button" id="delete-all-data-btn" class="danger-link-btn">Delete all my data</button>
+      </div>
     </section>
 
   </div>
@@ -281,6 +285,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=34"></script>
+  <script type="module" src="app.js?v=35"></script>
 </body>
 </html>

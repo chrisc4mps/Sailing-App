@@ -436,6 +436,60 @@ qualificationsList.addEventListener("click", async (e) => {
   }
 });
 
+// ---- Delete all data ----
+const deleteAllDataBtn = document.getElementById("delete-all-data-btn");
+
+deleteAllDataBtn.addEventListener("click", async () => {
+  if (!currentUserId) return;
+
+  const confirmed = confirm(
+    "This permanently deletes all your log entries, qualification records and files, and profile details " +
+      "(full name, home port, region). Your login itself stays, but everything in it will be gone. " +
+      "This cannot be undone.\n\nDelete everything?"
+  );
+  if (!confirmed) return;
+
+  const typed = prompt('Type DELETE (in capitals) to confirm.');
+  if (typed !== "DELETE") {
+    alert("Cancelled — nothing was deleted.");
+    return;
+  }
+
+  deleteAllDataBtn.disabled = true;
+  deleteAllDataBtn.textContent = "Deleting...";
+
+  const errors = [];
+
+  const { error: logsError } = await supabase.from("logs").delete().eq("user_id", currentUserId);
+  if (logsError) errors.push(`logs: ${logsError.message}`);
+
+  const { data: files, error: listError } = await supabase.storage.from(QUALIFICATIONS_BUCKET).list(currentUserId);
+  if (listError) {
+    errors.push(`listing files: ${listError.message}`);
+  } else if (files && files.length) {
+    const paths = files.map((f) => `${currentUserId}/${f.name}`);
+    const { error: removeError } = await supabase.storage.from(QUALIFICATIONS_BUCKET).remove(paths);
+    if (removeError) errors.push(`removing files: ${removeError.message}`);
+  }
+
+  const { data: profileData, error: profileError } = await supabase.auth.updateUser({
+    data: { full_name: "", home_port: "", region: "", qualifications: [] },
+  });
+  if (profileError) errors.push(`profile: ${profileError.message}`);
+
+  deleteAllDataBtn.disabled = false;
+  deleteAllDataBtn.textContent = "Delete all my data";
+
+  if (errors.length) {
+    alert(`Some data could not be deleted:\n${errors.join("\n")}`);
+  } else {
+    alert("All your data has been deleted.");
+  }
+
+  if (profileData?.user) updateProfileDisplay(profileData.user);
+  loadLogs();
+});
+
 // ---- Crew chip input ----
 const crewInput = document.getElementById("f-crew-input");
 const addCrewBtn = document.getElementById("add-crew-btn");
