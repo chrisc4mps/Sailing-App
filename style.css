@@ -152,6 +152,13 @@ input, select, textarea {
   padding: 0.4rem;
 }
 
+.header-line1 {
+  margin: 0.1rem 0 0;
+  color: var(--navy);
+  opacity: 0.8;
+  font-size: 0.85rem;
+}
+
 .profile-link {
   background: none;
   border: none;
@@ -159,7 +166,6 @@ input, select, textarea {
   opacity: 0.8;
   font-size: 0.85rem;
   padding: 0;
-  margin-top: 0.1rem;
   text-decoration: underline;
 }
 

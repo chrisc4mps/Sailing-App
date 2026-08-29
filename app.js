@@ -98,6 +98,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
 });
 
 // ---- Profile ----
+const headerLine1 = document.getElementById("header-line1");
 const profileLink = document.getElementById("profile-link");
 const profileBackBtn = document.getElementById("profile-back");
 const profileForm = document.getElementById("profile-form");
@@ -107,7 +108,13 @@ const profileSaved = document.getElementById("profile-saved");
 
 function updateProfileDisplay(user) {
   const fullName = user.user_metadata?.full_name;
-  profileLink.textContent = fullName ? `Hi, ${fullName}` : user.email;
+  if (fullName) {
+    headerLine1.textContent = `Welcome ${fullName}`;
+    profileLink.textContent = user.email;
+  } else {
+    headerLine1.textContent = user.email;
+    profileLink.textContent = "Complete profile";
+  }
   profileEmailInput.value = user.email;
   profileNameInput.value = fullName || "";
 }
