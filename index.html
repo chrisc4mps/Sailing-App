@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
 </head>
 <body>
 
@@ -83,6 +83,11 @@
       </header>
 
       <form id="entry-form" autocomplete="off">
+        <div class="gpx-import">
+          <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
+          <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
+        </div>
+
         <div class="form-row">
           <label for="f-date">Date</label>
           <input type="date" id="f-date" required autocomplete="off">
@@ -197,6 +202,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=13"></script>
+  <script type="module" src="app.js?v=14"></script>
 </body>
 </html>

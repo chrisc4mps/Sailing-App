@@ -269,6 +269,108 @@ entryForm.addEventListener("submit", async (e) => {
   loadLogs();
 });
 
+// ---- GPX import ----
+const gpxImportBtn = document.getElementById("gpx-import-btn");
+const gpxFileInput = document.getElementById("gpx-file-input");
+
+function haversineNm(lat1, lon1, lat2, lon2) {
+  const R_KM = 6371;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const km = R_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return km / 1.852;
+}
+
+function parseGpx(xmlText) {
+  const doc = new DOMParser().parseFromString(xmlText, "application/xml");
+  if (doc.querySelector("parsererror")) {
+    throw new Error("This doesn't look like a valid GPX file.");
+  }
+
+  let points = [...doc.querySelectorAll("trkpt")];
+  if (!points.length) points = [...doc.querySelectorAll("rtept")];
+  if (!points.length) {
+    throw new Error("No track points found in this GPX file.");
+  }
+
+  return points
+    .map((pt) => {
+      const lat = parseFloat(pt.getAttribute("lat"));
+      const lon = parseFloat(pt.getAttribute("lon"));
+      const timeEl = pt.querySelector("time");
+      const time = timeEl ? new Date(timeEl.textContent) : null;
+      return { lat, lon, time: time && !isNaN(time) ? time : null };
+    })
+    .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+}
+
+// Rough estimate only: classifies each track segment as "night" using a
+// fixed 21:00-06:00 window in local mean solar time (UTC + longitude/15
+// hours), not true sunrise/sunset - a reasonable rule of thumb, not
+// astronomy. Always reviewable/editable before saving.
+function estimateNightHours(points) {
+  let nightMs = 0;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    if (!prev.time || !curr.time) continue;
+    const segMs = curr.time - prev.time;
+    if (segMs <= 0) continue;
+
+    const midMs = (prev.time.getTime() + curr.time.getTime()) / 2;
+    const midDate = new Date(midMs);
+    const lonOffsetHours = curr.lon / 15;
+    const localHour =
+      (((midDate.getUTCHours() + midDate.getUTCMinutes() / 60 + lonOffsetHours) % 24) + 24) % 24;
+
+    if (localHour >= 21 || localHour < 6) nightMs += segMs;
+  }
+  return nightMs / 3600000;
+}
+
+function formatDateForInput(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+gpxImportBtn.addEventListener("click", () => gpxFileInput.click());
+
+gpxFileInput.addEventListener("change", async () => {
+  const file = gpxFileInput.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const points = parseGpx(text);
+
+    let totalNm = 0;
+    for (let i = 1; i < points.length; i++) {
+      totalNm += haversineNm(points[i - 1].lat, points[i - 1].lon, points[i].lat, points[i].lon);
+    }
+
+    const firstTime = points.find((p) => p.time)?.time;
+    if (firstTime) {
+      document.getElementById("f-date").value = formatDateForInput(firstTime);
+    }
+    document.getElementById("f-distance").value = totalNm.toFixed(1);
+
+    const nightHours = estimateNightHours(points);
+    if (nightHours > 0) {
+      document.getElementById("f-night-hours").value = nightHours.toFixed(1);
+    }
+  } catch (err) {
+    alert(`Could not import that GPX file: ${err.message}`);
+  } finally {
+    gpxFileInput.value = "";
+  }
+});
+
 // ---- Logbook list + totals ----
 const logList = document.getElementById("log-list");
 const emptyState = document.getElementById("empty-state");
