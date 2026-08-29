@@ -471,10 +471,17 @@ function renderLogList(entries) {
 }
 
 function attachSwipeToDelete(card, entry) {
+  const AXIS_THRESHOLD = 6; // px of movement before we commit to a direction
+
   let startX = 0;
+  let startY = 0;
+  let baseX = 0;
   let currentX = 0;
-  let dragging = false;
-  let moved = false;
+  // idle: no gesture in progress
+  // pending: pointer down, direction not yet decided
+  // horizontal: committed to a left/right swipe (we own it)
+  // vertical: committed to a page scroll (we ignore the rest of this gesture)
+  let mode = "idle";
   let suppressTap = false;
 
   function setX(x) {
@@ -483,30 +490,62 @@ function attachSwipeToDelete(card, entry) {
   }
 
   card.addEventListener("pointerdown", (e) => {
-    dragging = true;
-    moved = false;
+    mode = "pending";
     suppressTap = false;
     if (openSwipeCard && openSwipeCard !== card) {
       openSwipeCard.dispatchEvent(new Event("closeswipe"));
       openSwipeCard = null;
       suppressTap = true;
     }
-    startX = e.clientX - currentX;
+    startX = e.clientX;
+    startY = e.clientY;
+    baseX = currentX;
     card.style.transition = "none";
-    card.setPointerCapture(e.pointerId);
   });
 
   card.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
+    if (mode === "idle" || mode === "vertical") return;
     const dx = e.clientX - startX;
-    if (Math.abs(dx - currentX) > 5) moved = true;
-    setX(dx);
+    const dy = e.clientY - startY;
+
+    if (mode === "pending") {
+      if (Math.abs(dx) < AXIS_THRESHOLD && Math.abs(dy) < AXIS_THRESHOLD) return;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        mode = "horizontal";
+        card.setPointerCapture(e.pointerId);
+      } else {
+        // Vertical intent: this is a page scroll, not our gesture to handle.
+        mode = "vertical";
+        card.style.transition = "";
+        return;
+      }
+    }
+
+    setX(baseX + dx);
   });
 
   function endDrag() {
-    if (!dragging) return;
-    dragging = false;
+    if (mode === "idle") return;
+    if (mode === "vertical") {
+      mode = "idle";
+      return;
+    }
+
+    const wasTap = mode === "pending";
+    mode = "idle";
     card.style.transition = "";
+
+    if (wasTap) {
+      if (suppressTap) return;
+      if (baseX !== 0) {
+        // Tapping an already-open card closes it instead of opening the entry.
+        setX(0);
+        openSwipeCard = null;
+      } else {
+        openEntry(entry);
+      }
+      return;
+    }
 
     if (currentX < SWIPE_OPEN_X / 2) {
       setX(SWIPE_OPEN_X);
@@ -515,15 +554,6 @@ function attachSwipeToDelete(card, entry) {
     } else {
       setX(0);
       if (openSwipeCard === card) openSwipeCard = null;
-    }
-
-    if (!moved && !suppressTap) {
-      if (currentX === 0) {
-        openEntry(entry);
-      } else {
-        setX(0);
-        openSwipeCard = null;
-      }
     }
   }
 
