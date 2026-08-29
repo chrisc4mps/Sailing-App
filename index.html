@@ -2,51 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>⛵ Sailing Logbook</h1>
-    <p>Log your trips. Stored right in your browser.</p>
-  </header>
 
-  <main>
-    <form id="trip-form">
-      <div class="form-row">
-        <label for="date">Date</label>
-        <input type="date" id="date" required>
-      </div>
-      <div class="form-row">
-        <label for="departure">Departure</label>
-        <input type="text" id="departure" placeholder="e.g. Newport Harbor" required>
-      </div>
-      <div class="form-row">
-        <label for="destination">Destination</label>
-        <input type="text" id="destination" placeholder="e.g. Catalina Island" required>
-      </div>
-      <div class="form-row">
-        <label for="distance">Distance (nm)</label>
-        <input type="number" id="distance" min="0" step="0.1" placeholder="e.g. 26">
-      </div>
-      <div class="form-row">
-        <label for="notes">Notes</label>
-        <textarea id="notes" rows="2" placeholder="Wind, weather, crew, anything worth remembering..."></textarea>
-      </div>
-      <button type="submit">Add Trip</button>
-    </form>
+  <!-- Auth screen -->
+  <section id="view-auth" class="screen">
+    <div class="auth-box">
+      <h1>⛵ Sailing Logbook</h1>
+      <p class="tagline">Sign in with your email — no password needed.</p>
 
-    <section id="log">
-      <div class="log-header">
-        <h2>Trips</h2>
-        <span id="trip-count"></span>
+      <form id="login-form">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" inputmode="email" autocomplete="email" required placeholder="you@example.com">
+        <button type="submit" class="primary-btn">Send magic link</button>
+      </form>
+
+      <div id="check-email" class="info-box" hidden>
+        <p>Check your inbox — we've sent a sign-in link to <strong id="sent-to-email"></strong>.</p>
+        <button type="button" id="use-different-email" class="link-button">Use a different email</button>
       </div>
-      <ul id="trip-list"></ul>
-      <p id="empty-state">No trips logged yet. Add your first one above!</p>
+
+      <p id="auth-error" class="error-text" hidden></p>
+    </div>
+  </section>
+
+  <!-- Main app -->
+  <div id="view-app" class="screen" hidden>
+
+    <!-- Logbook (list) screen -->
+    <section id="view-logbook" class="app-screen">
+      <header class="app-header">
+        <h1>Sailing Logbook</h1>
+        <button type="button" id="sign-out" class="link-button">Sign out</button>
+      </header>
+
+      <div class="totals-grid">
+        <div class="stat-tile">
+          <span class="stat-value" id="stat-nm">0</span>
+          <span class="stat-label">Total nm</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-value" id="stat-days">0</span>
+          <span class="stat-label">Sailing days</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-value" id="stat-night-hours">0</span>
+          <span class="stat-label">Night hours</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-value" id="stat-skipper-days">0</span>
+          <span class="stat-label">Days as skipper</span>
+        </div>
+      </div>
+
+      <ul id="log-list"></ul>
+      <p id="empty-state" class="empty-state" hidden>No entries yet. Tap "+ Add Log" to log your first trip.</p>
+
+      <div class="bottom-bar">
+        <button type="button" id="add-log-btn" class="primary-btn">+ Add Log</button>
+      </div>
     </section>
-  </main>
 
-  <script src="script.js"></script>
+    <!-- Add / edit entry screen -->
+    <section id="view-form" class="app-screen" hidden>
+      <header class="app-header">
+        <button type="button" id="form-back" class="link-button">Cancel</button>
+        <h1 id="form-title">Add Log</h1>
+      </header>
+
+      <form id="entry-form">
+        <div class="form-row">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date" required>
+        </div>
+
+        <div class="form-row">
+          <label for="f-type">Type</label>
+          <select id="f-type" required>
+            <option value="Cruise">Cruise</option>
+            <option value="Race">Race</option>
+            <option value="Delivery">Delivery</option>
+          </select>
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-from">From</label>
+            <input type="text" id="f-from" required placeholder="e.g. Lymington">
+          </div>
+          <div>
+            <label for="f-to">To</label>
+            <input type="text" id="f-to" required placeholder="e.g. Cherbourg">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="f-yacht-name">Yacht name</label>
+          <input type="text" id="f-yacht-name" required placeholder="e.g. Moonshadow">
+        </div>
+
+        <div class="form-row">
+          <label for="f-yacht-class">Yacht class / type <span class="optional">(optional)</span></label>
+          <input type="text" id="f-yacht-class" placeholder="e.g. Sun Odyssey 349">
+        </div>
+
+        <div class="form-row">
+          <label for="f-skipper">Skipper</label>
+          <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith">
+        </div>
+
+        <div class="form-row">
+          <label for="f-crew-input">Crew</label>
+          <div class="chip-input">
+            <input type="text" id="f-crew-input" placeholder="Add a crew name and press +">
+            <button type="button" id="add-crew-btn" class="chip-add-btn">+</button>
+          </div>
+          <div id="crew-chips" class="chips"></div>
+        </div>
+
+        <div class="form-row">
+          <label for="f-role">My role</label>
+          <select id="f-role" required>
+            <option value="Crew">Crew</option>
+            <option value="Watch Leader">Watch Leader</option>
+            <option value="Mate">Mate</option>
+            <option value="Skipper">Skipper</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="f-wind">Maximum wind force <span class="optional">(optional)</span></label>
+          <select id="f-wind">
+            <option value="">Not recorded</option>
+            <option value="0">Force 0 — Calm</option>
+            <option value="1">Force 1 — Light air</option>
+            <option value="2">Force 2 — Light breeze</option>
+            <option value="3">Force 3 — Gentle breeze</option>
+            <option value="4">Force 4 — Moderate breeze</option>
+            <option value="5">Force 5 — Fresh breeze</option>
+            <option value="6">Force 6 — Strong breeze</option>
+            <option value="7">Force 7 — Near gale</option>
+            <option value="8">Force 8 — Gale</option>
+            <option value="9">Force 9 — Severe gale</option>
+            <option value="10">Force 10 — Storm</option>
+            <option value="11">Force 11 — Violent storm</option>
+            <option value="12">Force 12 — Hurricane</option>
+          </select>
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-distance">Distance (nm)</label>
+            <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62">
+          </div>
+          <div>
+            <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
+            <input type="number" id="f-night-hours" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="f-notes">Notes <span class="optional">(optional)</span></label>
+          <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..."></textarea>
+        </div>
+
+        <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
+      </form>
+    </section>
+
+  </div>
+
+  <script src="vendor/supabase.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
