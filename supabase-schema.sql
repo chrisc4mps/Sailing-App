@@ -6,6 +6,8 @@ create table if not exists public.logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
   date date not null,
+  start_time time,
+  end_time time,
   type text not null check (type in ('Cruise', 'Race', 'Delivery')),
   from_location text not null,
   to_location text not null,

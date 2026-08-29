@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 
@@ -91,6 +91,17 @@
         <div class="form-row">
           <label for="f-date">Date</label>
           <input type="date" id="f-date" required autocomplete="off">
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-start-time">Start time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-start-time" autocomplete="off">
+          </div>
+          <div>
+            <label for="f-end-time">End time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-end-time" autocomplete="off">
+          </div>
         </div>
 
         <div class="form-row">
@@ -202,6 +213,6 @@
   </div>
 
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=15"></script>
+  <script type="module" src="app.js?v=16"></script>
 </body>
 </html>

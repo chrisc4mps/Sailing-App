@@ -215,6 +215,8 @@ formBackBtn.addEventListener("click", () => {
 function openEntry(entry) {
   editingId = entry.id;
   document.getElementById("f-date").value = entry.date;
+  document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
+  document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
   document.getElementById("f-type").value = entry.type;
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
@@ -241,6 +243,8 @@ entryForm.addEventListener("submit", async (e) => {
 
   const record = {
     date: document.getElementById("f-date").value,
+    start_time: document.getElementById("f-start-time").value || null,
+    end_time: document.getElementById("f-end-time").value || null,
     type: document.getElementById("f-type").value,
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
@@ -339,6 +343,12 @@ function formatDateForInput(date) {
   return `${y}-${m}-${d}`;
 }
 
+function formatTimeForInput(date) {
+  const h = String(date.getHours()).padStart(2, "0");
+  const m = String(date.getMinutes()).padStart(2, "0");
+  return `${h}:${m}`;
+}
+
 gpxImportBtn.addEventListener("click", () => gpxFileInput.click());
 
 gpxFileInput.addEventListener("change", async () => {
@@ -355,14 +365,25 @@ gpxFileInput.addEventListener("change", async () => {
     }
 
     const firstTime = points.find((p) => p.time)?.time;
+    const lastTime = [...points].reverse().find((p) => p.time)?.time;
+
     if (firstTime) {
       document.getElementById("f-date").value = formatDateForInput(firstTime);
+      document.getElementById("f-start-time").value = formatTimeForInput(firstTime);
+    }
+    if (lastTime) {
+      document.getElementById("f-end-time").value = formatTimeForInput(lastTime);
     }
     document.getElementById("f-distance").value = totalNm.toFixed(1);
 
     const nightHours = estimateNightHours(points);
     if (nightHours > 0) {
       document.getElementById("f-night-hours").value = nightHours.toFixed(1);
+    }
+
+    const notesEl = document.getElementById("f-notes");
+    if (!notesEl.value.trim()) {
+      notesEl.value = `Imported from ${file.name}`;
     }
   } catch (err) {
     alert(`Could not import that GPX file: ${err.message}`);
