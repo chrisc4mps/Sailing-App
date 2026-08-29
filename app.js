@@ -216,6 +216,10 @@ function updateProfileDisplay(user) {
   profileNameInput.value = fullName || "";
   profileHomePortInput.value = user.user_metadata?.home_port || "";
   profileRegionInput.value = user.user_metadata?.region || "";
+
+  currentUserId = user.id;
+  currentQualifications = Array.isArray(user.user_metadata?.qualifications) ? user.user_metadata.qualifications : [];
+  renderQualifications();
 }
 
 profileLink.addEventListener("click", showProfile);
@@ -240,6 +244,106 @@ profileForm.addEventListener("submit", async (e) => {
 
   updateProfileDisplay(data.user);
   profileSaved.hidden = false;
+});
+
+// ---- Qualifications ----
+const QUALIFICATIONS_BUCKET = "qualifications";
+const qualNameInput = document.getElementById("qual-name-input");
+const qualFileInput = document.getElementById("qual-file-input");
+const qualAddBtn = document.getElementById("qual-add-btn");
+const qualificationsList = document.getElementById("qualifications-list");
+const qualStatus = document.getElementById("qual-status");
+let currentUserId = null;
+let currentQualifications = [];
+
+function renderQualifications() {
+  qualificationsList.innerHTML = currentQualifications
+    .map(
+      (q) => `
+      <li class="qual-item">
+        <button type="button" class="qual-link-btn" data-path="${escapeHtml(q.path)}">${escapeHtml(q.name)}</button>
+        <button type="button" class="qual-remove-btn" data-id="${q.id}" aria-label="Remove ${escapeHtml(q.name)}">&times;</button>
+      </li>`
+    )
+    .join("");
+}
+
+qualAddBtn.addEventListener("click", () => {
+  const name = qualNameInput.value.trim();
+  if (!name) {
+    alert("Enter a name for the qualification first, e.g. Day Skipper.");
+    return;
+  }
+  qualFileInput.click();
+});
+
+qualFileInput.addEventListener("change", async () => {
+  const file = qualFileInput.files[0];
+  const name = qualNameInput.value.trim();
+  if (!file || !name || !currentUserId) {
+    qualFileInput.value = "";
+    return;
+  }
+
+  qualStatus.textContent = "Uploading...";
+  qualStatus.hidden = false;
+
+  const id = crypto.randomUUID();
+  const ext = file.name.includes(".") ? file.name.split(".").pop() : "dat";
+  const path = `${currentUserId}/${id}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage.from(QUALIFICATIONS_BUCKET).upload(path, file);
+  qualFileInput.value = "";
+
+  if (uploadError) {
+    qualStatus.hidden = true;
+    alert(`Could not upload file: ${uploadError.message}`);
+    return;
+  }
+
+  const updatedQualifications = [...currentQualifications, { id, name, path }];
+  const { error: saveError } = await supabase.auth.updateUser({ data: { qualifications: updatedQualifications } });
+  qualStatus.hidden = true;
+
+  if (saveError) {
+    alert(`Could not save qualification: ${saveError.message}`);
+    await supabase.storage.from(QUALIFICATIONS_BUCKET).remove([path]);
+    return;
+  }
+
+  currentQualifications = updatedQualifications;
+  qualNameInput.value = "";
+  renderQualifications();
+});
+
+qualificationsList.addEventListener("click", async (e) => {
+  const linkBtn = e.target.closest(".qual-link-btn");
+  if (linkBtn) {
+    const { data, error } = await supabase.storage.from(QUALIFICATIONS_BUCKET).createSignedUrl(linkBtn.dataset.path, 3600);
+    if (error) {
+      alert(`Could not open file: ${error.message}`);
+      return;
+    }
+    window.open(data.signedUrl, "_blank");
+    return;
+  }
+
+  const removeBtn = e.target.closest(".qual-remove-btn");
+  if (removeBtn) {
+    const qual = currentQualifications.find((q) => q.id === removeBtn.dataset.id);
+    if (!qual || !confirm(`Remove "${qual.name}"?`)) return;
+
+    const updatedQualifications = currentQualifications.filter((q) => q.id !== qual.id);
+    const { error } = await supabase.auth.updateUser({ data: { qualifications: updatedQualifications } });
+    if (error) {
+      alert(`Could not remove qualification: ${error.message}`);
+      return;
+    }
+
+    await supabase.storage.from(QUALIFICATIONS_BUCKET).remove([qual.path]);
+    currentQualifications = updatedQualifications;
+    renderQualifications();
+  }
 });
 
 // ---- Crew chip input ----

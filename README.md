@@ -11,6 +11,7 @@ This app uses [Supabase](https://supabase.com) for authentication (magic-link em
 3. **Get your API credentials**: in your Supabase project go to *Project Settings → API* and copy the **Project URL** and the **anon public key**.
 4. **Fill in `config.js`** with those two values.
 5. **Configure redirect URLs**: in your Supabase project go to *Authentication → URL Configuration* and add the URL(s) where the app is hosted (e.g. `https://<your-username>.github.io/Sailing-App/`) to both the Site URL and the Redirect URLs list. Add `http://localhost:PORT` too if you want to test locally.
+6. **Set up qualification file storage** (optional, only needed for the Profile screen's Qualifications section): in your Supabase project go to *Storage → New bucket*, name it exactly `qualifications`, and leave "Public bucket" **off**. Then run [`storage-schema.sql`](./storage-schema.sql) in the SQL Editor to lock each user to their own files.
 
 ## Running it
 
