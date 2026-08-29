@@ -480,13 +480,40 @@ async function loadLogs() {
 
 let knownYachtNames = [];
 let knownSkippers = [];
+let knownFromLocations = [];
+let knownToLocations = [];
+let knownYachtLengths = {};
 
 function updateAutocompleteLists(entries) {
   knownYachtNames = [...new Set(entries.map((e) => e.yacht_name).filter(Boolean))].sort();
   knownSkippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
+  knownFromLocations = [...new Set(entries.map((e) => e.from_location).filter(Boolean))].sort();
+  knownToLocations = [...new Set(entries.map((e) => e.to_location).filter(Boolean))].sort();
+
+  // entries are newest-first, so the first match per yacht is its most
+  // recently recorded length.
+  knownYachtLengths = {};
+  for (const e of entries) {
+    if (e.yacht_name && e.length_m != null) {
+      const key = e.yacht_name.toLowerCase();
+      if (!(key in knownYachtLengths)) knownYachtLengths[key] = e.length_m;
+    }
+  }
 }
 
-function setupAutocomplete(input, listEl, getOptions) {
+function applyKnownYachtLength(yachtName) {
+  const lengthM = knownYachtLengths[yachtName.toLowerCase()];
+  if (lengthM == null) return;
+
+  const ftInput = document.getElementById("f-length-ft");
+  const mInput = document.getElementById("f-length-m");
+  if (ftInput.value.trim() || mInput.value.trim()) return; // don't overwrite a value already entered
+
+  mInput.value = Number(lengthM).toFixed(1);
+  ftInput.value = (lengthM * FT_PER_M).toFixed(1);
+}
+
+function setupAutocomplete(input, listEl, getOptions, onSelect) {
   function render() {
     const filterText = input.value.trim().toLowerCase();
     const options = getOptions().filter((o) => o.toLowerCase().includes(filterText));
@@ -505,6 +532,9 @@ function setupAutocomplete(input, listEl, getOptions) {
   input.addEventListener("input", render);
   input.addEventListener("blur", () => {
     listEl.hidden = true;
+    if (!onSelect) return;
+    const match = getOptions().find((o) => o.toLowerCase() === input.value.trim().toLowerCase());
+    if (match) onSelect(match);
   });
 
   // mousedown (not click) fires before the input's blur, so the value is
@@ -515,11 +545,14 @@ function setupAutocomplete(input, listEl, getOptions) {
     e.preventDefault();
     input.value = li.textContent;
     listEl.hidden = true;
+    if (onSelect) onSelect(li.textContent);
   });
 }
 
-setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames);
+setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames, applyKnownYachtLength);
 setupAutocomplete(document.getElementById("f-skipper"), document.getElementById("skipper-suggestions"), () => knownSkippers);
+setupAutocomplete(document.getElementById("f-from"), document.getElementById("from-suggestions"), () => knownFromLocations);
+setupAutocomplete(document.getElementById("f-to"), document.getElementById("to-suggestions"), () => knownToLocations);
 
 const SWIPE_OPEN_X = -88;
 let openSwipeCard = null;
