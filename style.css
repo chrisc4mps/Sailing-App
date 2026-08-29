@@ -229,6 +229,11 @@ input, select, textarea {
   color: var(--navy);
 }
 
+.trip-heading-total {
+  font-weight: 400;
+  color: var(--navy-muted);
+}
+
 .log-item {
   position: relative;
   border-radius: 10px;

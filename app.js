@@ -893,13 +893,21 @@ function renderLogList(entries) {
   emptyState.hidden = entries.length > 0;
   openSwipeCard = null;
 
+  const tripTotals = {};
+  for (const e of entries) {
+    if (e.trip_name) {
+      tripTotals[e.trip_name] = (tripTotals[e.trip_name] || 0) + Number(e.distance_nm || 0);
+    }
+  }
+
   let lastTripName = null;
 
   for (const entry of entries) {
     if (entry.trip_name && entry.trip_name !== lastTripName) {
       const headingLi = document.createElement("li");
       headingLi.className = "trip-heading-item";
-      headingLi.innerHTML = `<h3 class="trip-heading">${escapeHtml(entry.trip_name)}</h3>`;
+      const totalNm = formatNumber(tripTotals[entry.trip_name]);
+      headingLi.innerHTML = `<h3 class="trip-heading">${escapeHtml(entry.trip_name)} <span class="trip-heading-total">(${totalNm} nm)</span></h3>`;
       logList.appendChild(headingLi);
     }
     lastTripName = entry.trip_name || null;
