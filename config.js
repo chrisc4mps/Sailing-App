@@ -2,4 +2,4 @@
 // The anon/public key is safe to use here — it is designed for client-side
 // use and access is enforced server-side by Row Level Security.
 export const SUPABASE_URL = "https://cdbaqysqkoaykzqpvquu.supabase.co";
-export const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+export const SUPABASE_ANON_KEY = "sb_publishable_ld0QjonC2eyBDFLcDPAYtA_qJgS5OGg";
