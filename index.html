@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=38">
+  <link rel="stylesheet" href="style.css?v=39">
 </head>
 <body>
 
@@ -154,8 +154,9 @@
         </div>
 
         <div class="form-row">
-          <label for="f-role">My role</label>
-          <select id="f-role" required>
+          <label for="f-role">My role <span class="optional">(optional)</span></label>
+          <select id="f-role">
+            <option value="">—</option>
             <option value="Crew">Crew</option>
             <option value="Watch Leader">Watch Leader</option>
             <option value="Mate">Mate</option>
@@ -164,9 +165,9 @@
         </div>
 
         <div class="form-row">
-          <label for="f-skipper">Skipper</label>
+          <label for="f-skipper">Skipper <span class="optional">(optional)</span></label>
           <div class="autocomplete">
-            <input type="text" id="f-skipper" required placeholder="e.g. Jane Smith" autocomplete="off">
+            <input type="text" id="f-skipper" placeholder="e.g. Jane Smith" autocomplete="off">
             <ul id="skipper-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
@@ -196,8 +197,9 @@
         </div>
 
         <div class="form-row">
-          <label for="f-type">Type</label>
-          <select id="f-type" required>
+          <label for="f-type">Type <span class="optional">(optional)</span></label>
+          <select id="f-type">
+            <option value="">—</option>
             <option value="Cruise">Cruise</option>
             <option value="Race">Race</option>
             <option value="Delivery">Delivery</option>
@@ -205,9 +207,9 @@
         </div>
 
         <div class="form-row">
-          <label for="f-yacht-name">Yacht name</label>
+          <label for="f-yacht-name">Yacht name <span class="optional">(optional)</span></label>
           <div class="autocomplete">
-            <input type="text" id="f-yacht-name" required placeholder="e.g. Moonshadow" autocomplete="off">
+            <input type="text" id="f-yacht-name" placeholder="e.g. Moonshadow" autocomplete="off">
             <ul id="yacht-name-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
@@ -298,6 +300,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=38"></script>
+  <script type="module" src="app.js?v=39"></script>
 </body>
 </html>

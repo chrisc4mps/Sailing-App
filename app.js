@@ -601,16 +601,16 @@ function openEntry(entry) {
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
   document.getElementById("f-trip-name").value = entry.trip_name || "";
-  document.getElementById("f-type").value = entry.type;
+  document.getElementById("f-type").value = entry.type || "";
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
-  document.getElementById("f-yacht-name").value = entry.yacht_name;
+  document.getElementById("f-yacht-name").value = entry.yacht_name || "";
   document.getElementById("f-length-ft").value = entry.length_ft ?? "";
   document.getElementById("f-length-m").value = entry.length_m ?? "";
-  document.getElementById("f-skipper").value = entry.skipper;
+  document.getElementById("f-skipper").value = entry.skipper || "";
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
-  document.getElementById("f-role").value = entry.my_role;
+  document.getElementById("f-role").value = entry.my_role || "";
   document.getElementById("f-distance").value = entry.distance_nm;
   document.getElementById("f-duration").value = entry.duration_hours ?? "";
   document.getElementById("f-night-hours").value = entry.night_hours ?? "";
@@ -698,15 +698,15 @@ entryForm.addEventListener("submit", async (e) => {
     end_time: document.getElementById("f-end-time").value || null,
     trip_name: document.getElementById("f-trip-name").value.trim() || null,
     gpx_filename: document.getElementById("f-gpx-filename").value || null,
-    type: document.getElementById("f-type").value,
+    type: document.getElementById("f-type").value || null,
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
-    yacht_name: document.getElementById("f-yacht-name").value.trim(),
+    yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
-    skipper: document.getElementById("f-skipper").value.trim(),
+    skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
-    my_role: document.getElementById("f-role").value,
+    my_role: document.getElementById("f-role").value || null,
     distance_nm: Number(document.getElementById("f-distance").value),
     duration_hours: durationValue === "" ? null : Number(durationValue),
     night_hours: nightHoursValue === "" ? null : Number(nightHoursValue),
@@ -1029,7 +1029,7 @@ function renderLogList(entries) {
         <span class="log-nm">${entry.distance_nm} nm</span>
       </div>
       <div class="log-route">${escapeHtml(entry.from_location)} → ${escapeHtml(entry.to_location)}</div>
-      <div class="log-meta">${escapeHtml(entry.yacht_name)} · ${escapeHtml(entry.my_role)}</div>
+      ${[entry.yacht_name, entry.my_role].filter(Boolean).length ? `<div class="log-meta">${[entry.yacht_name, entry.my_role].filter(Boolean).map(escapeHtml).join(" · ")}</div>` : ""}
     `;
     attachSwipeToDelete(card, entry);
 
