@@ -223,6 +223,7 @@ function updateProfileDisplay(user) {
   profileRegionInput.value = user.user_metadata?.region || "";
 
   currentUserId = user.id;
+  currentUserFullName = fullName || null;
   currentQualifications = Array.isArray(user.user_metadata?.qualifications) ? user.user_metadata.qualifications : [];
   renderQualifications();
 }
@@ -260,6 +261,7 @@ const qualAddBtn = document.getElementById("qual-add-btn");
 const qualificationsList = document.getElementById("qualifications-list");
 const qualStatus = document.getElementById("qual-status");
 let currentUserId = null;
+let currentUserFullName = null;
 let currentQualifications = [];
 let pendingAttachId = null;
 let editingQualDateId = null;
@@ -584,6 +586,13 @@ addLogBtn.addEventListener("click", () => {
 });
 
 document.getElementById("f-date").addEventListener("input", updateDateWeekdayLabel);
+
+document.getElementById("f-role").addEventListener("change", (e) => {
+  if (e.target.value !== "Skipper" || !currentUserFullName) return;
+  const skipperInput = document.getElementById("f-skipper");
+  if (skipperInput.value.trim()) return; // don't overwrite a value already entered
+  skipperInput.value = currentUserFullName;
+});
 
 formBackBtn.addEventListener("click", () => {
   showLogbook();
