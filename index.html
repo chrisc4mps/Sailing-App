@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=28">
+  <link rel="stylesheet" href="style.css?v=29">
 </head>
 <body>
 
@@ -238,8 +238,9 @@
       <div class="qual-section">
         <h2 class="form-section-heading no-border">Qualifications</h2>
         <ul id="qualifications-list" class="qualifications-list"></ul>
+        <input type="text" id="qual-name-input" placeholder="e.g. Day Skipper" autocomplete="off" class="qual-name-field">
         <div class="chip-input">
-          <input type="text" id="qual-name-input" placeholder="e.g. Day Skipper" autocomplete="off">
+          <input type="month" id="qual-date-input" autocomplete="off">
           <button type="button" id="qual-add-btn" class="chip-add-btn">+</button>
         </div>
         <input type="file" id="qual-file-input" accept="image/*,application/pdf" hidden>
@@ -272,6 +273,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=28"></script>
+  <script type="module" src="app.js?v=29"></script>
 </body>
 </html>

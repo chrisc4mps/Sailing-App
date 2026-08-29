@@ -386,14 +386,38 @@ input, select, textarea {
   padding: 0.7rem 0.9rem;
 }
 
-.qual-link-btn {
+.qual-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.qual-name {
+  font-weight: 600;
+}
+
+.qual-date {
+  font-size: 0.8rem;
+  color: var(--navy-muted);
+  margin-top: 0.1rem;
+}
+
+.qual-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.qual-link-btn,
+.qual-attach-btn {
   background: none;
   border: none;
   color: var(--navy);
   text-decoration: underline;
-  font-size: 1rem;
+  font-size: 0.95rem;
   padding: 0;
-  text-align: left;
+  white-space: nowrap;
 }
 
 .qual-remove-btn {
@@ -403,6 +427,10 @@ input, select, textarea {
   font-size: 1.3rem;
   line-height: 1;
   padding: 0 0.3rem;
+}
+
+.qual-name-field {
+  margin-bottom: 0.5rem;
 }
 
 .form-row label {

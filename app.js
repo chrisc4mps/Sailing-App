@@ -249,38 +249,77 @@ profileForm.addEventListener("submit", async (e) => {
 // ---- Qualifications ----
 const QUALIFICATIONS_BUCKET = "qualifications";
 const qualNameInput = document.getElementById("qual-name-input");
+const qualDateInput = document.getElementById("qual-date-input");
 const qualFileInput = document.getElementById("qual-file-input");
 const qualAddBtn = document.getElementById("qual-add-btn");
 const qualificationsList = document.getElementById("qualifications-list");
 const qualStatus = document.getElementById("qual-status");
 let currentUserId = null;
 let currentQualifications = [];
+let pendingAttachId = null;
+
+function formatQualDate(monthValue) {
+  if (!monthValue) return "";
+  const [y, m] = monthValue.split("-").map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString(undefined, { month: "short", year: "numeric" });
+}
 
 function renderQualifications() {
   qualificationsList.innerHTML = currentQualifications
-    .map(
-      (q) => `
-      <li class="qual-item">
-        <button type="button" class="qual-link-btn" data-path="${escapeHtml(q.path)}">${escapeHtml(q.name)}</button>
-        <button type="button" class="qual-remove-btn" data-id="${q.id}" aria-label="Remove ${escapeHtml(q.name)}">&times;</button>
-      </li>`
-    )
+    .map((q) => {
+      const dateLabel = formatQualDate(q.date);
+      const fileAction = q.path
+        ? `<button type="button" class="qual-link-btn" data-path="${escapeHtml(q.path)}">View</button>`
+        : `<button type="button" class="qual-attach-btn" data-id="${q.id}">Attach file</button>`;
+      return `
+        <li class="qual-item">
+          <div class="qual-info">
+            <span class="qual-name">${escapeHtml(q.name)}</span>
+            ${dateLabel ? `<span class="qual-date">${escapeHtml(dateLabel)}</span>` : ""}
+          </div>
+          <div class="qual-actions">
+            ${fileAction}
+            <button type="button" class="qual-remove-btn" data-id="${q.id}" aria-label="Remove ${escapeHtml(q.name)}">&times;</button>
+          </div>
+        </li>`;
+    })
     .join("");
 }
 
-qualAddBtn.addEventListener("click", () => {
+qualAddBtn.addEventListener("click", async () => {
   const name = qualNameInput.value.trim();
   if (!name) {
-    alert("Enter a name for the qualification first, e.g. Day Skipper.");
+    alert("Enter a name for the qualification, e.g. Day Skipper.");
     return;
   }
-  qualFileInput.click();
+  if (!currentUserId) return;
+
+  const newQual = { id: crypto.randomUUID(), name, date: qualDateInput.value || null, path: null };
+  const updatedQualifications = [...currentQualifications, newQual];
+
+  const { error } = await supabase.auth.updateUser({ data: { qualifications: updatedQualifications } });
+  if (error) {
+    alert(`Could not save qualification: ${error.message}`);
+    return;
+  }
+
+  currentQualifications = updatedQualifications;
+  qualNameInput.value = "";
+  qualDateInput.value = "";
+  renderQualifications();
 });
 
 qualFileInput.addEventListener("change", async () => {
   const file = qualFileInput.files[0];
-  const name = qualNameInput.value.trim();
-  if (!file || !name || !currentUserId) {
+  const attachId = pendingAttachId;
+  pendingAttachId = null;
+
+  if (!file || !attachId || !currentUserId) {
+    qualFileInput.value = "";
+    return;
+  }
+  const qual = currentQualifications.find((q) => q.id === attachId);
+  if (!qual) {
     qualFileInput.value = "";
     return;
   }
@@ -288,11 +327,10 @@ qualFileInput.addEventListener("change", async () => {
   qualStatus.textContent = "Uploading...";
   qualStatus.hidden = false;
 
-  const id = crypto.randomUUID();
   const ext = file.name.includes(".") ? file.name.split(".").pop() : "dat";
-  const path = `${currentUserId}/${id}.${ext}`;
+  const path = `${currentUserId}/${qual.id}.${ext}`;
 
-  const { error: uploadError } = await supabase.storage.from(QUALIFICATIONS_BUCKET).upload(path, file);
+  const { error: uploadError } = await supabase.storage.from(QUALIFICATIONS_BUCKET).upload(path, file, { upsert: true });
   qualFileInput.value = "";
 
   if (uploadError) {
@@ -301,22 +339,27 @@ qualFileInput.addEventListener("change", async () => {
     return;
   }
 
-  const updatedQualifications = [...currentQualifications, { id, name, path }];
+  const updatedQualifications = currentQualifications.map((q) => (q.id === attachId ? { ...q, path } : q));
   const { error: saveError } = await supabase.auth.updateUser({ data: { qualifications: updatedQualifications } });
   qualStatus.hidden = true;
 
   if (saveError) {
     alert(`Could not save qualification: ${saveError.message}`);
-    await supabase.storage.from(QUALIFICATIONS_BUCKET).remove([path]);
     return;
   }
 
   currentQualifications = updatedQualifications;
-  qualNameInput.value = "";
   renderQualifications();
 });
 
 qualificationsList.addEventListener("click", async (e) => {
+  const attachBtn = e.target.closest(".qual-attach-btn");
+  if (attachBtn) {
+    pendingAttachId = attachBtn.dataset.id;
+    qualFileInput.click();
+    return;
+  }
+
   const linkBtn = e.target.closest(".qual-link-btn");
   if (linkBtn) {
     const { data, error } = await supabase.storage.from(QUALIFICATIONS_BUCKET).createSignedUrl(linkBtn.dataset.path, 3600);
@@ -340,7 +383,7 @@ qualificationsList.addEventListener("click", async (e) => {
       return;
     }
 
-    await supabase.storage.from(QUALIFICATIONS_BUCKET).remove([qual.path]);
+    if (qual.path) await supabase.storage.from(QUALIFICATIONS_BUCKET).remove([qual.path]);
     currentQualifications = updatedQualifications;
     renderQualifications();
   }
