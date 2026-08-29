@@ -104,19 +104,21 @@ const profileBackBtn = document.getElementById("profile-back");
 const profileForm = document.getElementById("profile-form");
 const profileEmailInput = document.getElementById("profile-email");
 const profileNameInput = document.getElementById("profile-name");
+const profileHomePortInput = document.getElementById("profile-home-port");
 const profileSaved = document.getElementById("profile-saved");
 
 function updateProfileDisplay(user) {
   const fullName = user.user_metadata?.full_name;
   if (fullName) {
     headerLine1.textContent = `Welcome ${fullName}`;
-    profileLink.textContent = user.email;
+    profileLink.textContent = "Edit profile";
   } else {
     headerLine1.textContent = user.email;
     profileLink.textContent = "Complete profile";
   }
   profileEmailInput.value = user.email;
   profileNameInput.value = fullName || "";
+  profileHomePortInput.value = user.user_metadata?.home_port || "";
 }
 
 profileLink.addEventListener("click", showProfile);
@@ -127,7 +129,10 @@ profileForm.addEventListener("submit", async (e) => {
   profileSaved.hidden = true;
 
   const { data, error } = await supabase.auth.updateUser({
-    data: { full_name: profileNameInput.value.trim() },
+    data: {
+      full_name: profileNameInput.value.trim(),
+      home_port: profileHomePortInput.value.trim(),
+    },
   });
 
   if (error) {
