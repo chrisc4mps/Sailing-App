@@ -510,6 +510,12 @@ input, select, textarea {
   color: var(--navy-muted);
 }
 
+.date-weekday {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--navy-muted);
+}
+
 input, select, textarea {
   border: 1px solid var(--border);
   border-radius: 8px;

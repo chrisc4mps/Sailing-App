@@ -572,6 +572,7 @@ function resetForm() {
   renderCrewChips();
   editingId = null;
   document.getElementById("f-date").value = new Date().toISOString().slice(0, 10);
+  updateDateWeekdayLabel();
   document.getElementById("gpx-imported-label").hidden = true;
   document.getElementById("share-log-btn").hidden = true;
 }
@@ -581,6 +582,8 @@ addLogBtn.addEventListener("click", () => {
   formTitle.textContent = "Add Log";
   showForm();
 });
+
+document.getElementById("f-date").addEventListener("input", updateDateWeekdayLabel);
 
 formBackBtn.addEventListener("click", () => {
   showLogbook();
@@ -598,6 +601,7 @@ function openEntry(entry) {
   document.getElementById("f-gpx-filename").value = entry.gpx_filename || "";
   document.getElementById("share-log-btn").hidden = false;
   document.getElementById("f-date").value = entry.date;
+  updateDateWeekdayLabel();
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
   document.getElementById("f-trip-name").value = entry.trip_name || "";
@@ -662,6 +666,7 @@ function applyPendingSharedLogIfAny() {
   resetForm();
 
   if (data.date) document.getElementById("f-date").value = data.date;
+  updateDateWeekdayLabel();
   if (data.start_time) document.getElementById("f-start-time").value = data.start_time;
   if (data.end_time) document.getElementById("f-end-time").value = data.end_time;
   if (data.type) document.getElementById("f-type").value = data.type;
@@ -841,6 +846,7 @@ gpxFileInput.addEventListener("change", async () => {
 
     if (firstTime) {
       document.getElementById("f-date").value = formatDateForInput(firstTime);
+      updateDateWeekdayLabel();
       document.getElementById("f-start-time").value = formatTimeForInput(firstTime);
     }
     if (lastTime) {
@@ -1158,11 +1164,23 @@ function formatNumber(n) {
 }
 
 const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_FULL_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+function weekdayIndexForIsoDate(isoDate) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+}
 
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split("-").map(Number);
-  const weekday = WEEKDAY_NAMES[new Date(Date.UTC(year, month - 1, day)).getUTCDay()];
+  const weekday = WEEKDAY_NAMES[weekdayIndexForIsoDate(isoDate)];
   return `${weekday} ${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+}
+
+function updateDateWeekdayLabel() {
+  const isoDate = document.getElementById("f-date").value;
+  const label = document.getElementById("f-date-weekday");
+  label.textContent = isoDate ? WEEKDAY_FULL_NAMES[weekdayIndexForIsoDate(isoDate)] : "";
 }
 
 function escapeHtml(str) {
