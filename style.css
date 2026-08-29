@@ -311,6 +311,12 @@ input, select, textarea {
   border-bottom: 1px solid var(--border);
 }
 
+.gpx-imported-label {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--navy-muted);
+}
+
 .form-row {
   display: flex;
   flex-direction: column;

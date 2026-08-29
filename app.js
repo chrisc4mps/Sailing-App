@@ -200,6 +200,7 @@ function resetForm() {
   renderCrewChips();
   editingId = null;
   document.getElementById("f-date").value = new Date().toISOString().slice(0, 10);
+  document.getElementById("gpx-imported-label").hidden = true;
 }
 
 addLogBtn.addEventListener("click", () => {
@@ -214,6 +215,7 @@ formBackBtn.addEventListener("click", () => {
 
 function openEntry(entry) {
   editingId = entry.id;
+  document.getElementById("gpx-imported-label").hidden = true;
   document.getElementById("f-date").value = entry.date;
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
@@ -381,10 +383,9 @@ gpxFileInput.addEventListener("change", async () => {
       document.getElementById("f-night-hours").value = nightHours.toFixed(1);
     }
 
-    const notesEl = document.getElementById("f-notes");
-    if (!notesEl.value.trim()) {
-      notesEl.value = `Imported from ${file.name}`;
-    }
+    const importedLabel = document.getElementById("gpx-imported-label");
+    importedLabel.textContent = `Imported from: ${file.name}`;
+    importedLabel.hidden = false;
   } catch (err) {
     alert(`Could not import that GPX file: ${err.message}`);
   } finally {
