@@ -140,8 +140,8 @@ const shareQrBtn = document.getElementById("share-qr-btn");
 const shareChoiceCancelBtn = document.getElementById("share-choice-cancel-btn");
 let pendingShare = null;
 
-function openShareChoice(url, title, message) {
-  pendingShare = { url, title, message };
+function openShareChoice(url, title, qrMessage, linkMessage) {
+  pendingShare = { url, title, qrMessage, linkMessage: linkMessage || qrMessage };
   shareChoiceTitle.textContent = title;
   shareChoiceOverlay.hidden = false;
 }
@@ -153,11 +153,11 @@ shareChoiceCancelBtn.addEventListener("click", () => {
 shareViaBtn.addEventListener("click", async () => {
   shareChoiceOverlay.hidden = true;
   if (!pendingShare) return;
-  const { url, title, message } = pendingShare;
+  const { url, title, linkMessage } = pendingShare;
 
   if (navigator.share) {
     try {
-      await navigator.share({ title, text: message, url });
+      await navigator.share({ title, text: linkMessage, url });
     } catch (err) {
       // User cancelled the share sheet - nothing to do.
     }
@@ -169,12 +169,17 @@ shareViaBtn.addEventListener("click", async () => {
 shareQrBtn.addEventListener("click", () => {
   shareChoiceOverlay.hidden = true;
   if (!pendingShare) return;
-  openShareOverlay(pendingShare.url, pendingShare.title, pendingShare.message);
+  openShareOverlay(pendingShare.url, pendingShare.title, pendingShare.qrMessage);
 });
 
 shareBtn.addEventListener("click", () => {
   const url = window.location.origin + window.location.pathname;
-  openShareChoice(url, "Share this app", "Scan this to open the Sailing Logbook.");
+  openShareChoice(
+    url,
+    "Share this app",
+    "Scan this to open the Sailing Logbook.",
+    "Tap this link to open the Sailing Logbook."
+  );
 });
 
 supabase.auth.onAuthStateChange((_event, session) => {
