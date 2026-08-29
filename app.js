@@ -215,6 +215,22 @@ const addLogBtn = document.getElementById("add-log-btn");
 const formBackBtn = document.getElementById("form-back");
 let editingId = null;
 
+function calculateDuration() {
+  const startVal = document.getElementById("f-start-time").value;
+  const endVal = document.getElementById("f-end-time").value;
+  if (!startVal || !endVal) return;
+
+  const [startH, startM] = startVal.split(":").map(Number);
+  const [endH, endM] = endVal.split(":").map(Number);
+  let minutes = endH * 60 + endM - (startH * 60 + startM);
+  if (minutes < 0) minutes += 24 * 60; // crossed midnight
+
+  document.getElementById("f-duration").value = (minutes / 60).toFixed(1);
+}
+
+document.getElementById("f-start-time").addEventListener("change", calculateDuration);
+document.getElementById("f-end-time").addEventListener("change", calculateDuration);
+
 function resetForm() {
   entryForm.reset();
   currentCrew = [];
@@ -250,6 +266,7 @@ function openEntry(entry) {
   renderCrewChips();
   document.getElementById("f-role").value = entry.my_role;
   document.getElementById("f-distance").value = entry.distance_nm;
+  document.getElementById("f-duration").value = entry.duration_hours ?? "";
   document.getElementById("f-night-hours").value = entry.night_hours ?? "";
   document.getElementById("f-notes").value = entry.notes || "";
 
@@ -263,6 +280,7 @@ entryForm.addEventListener("submit", async (e) => {
   saveBtn.disabled = true;
 
   const nightHoursValue = document.getElementById("f-night-hours").value;
+  const durationValue = document.getElementById("f-duration").value;
 
   const record = {
     date: document.getElementById("f-date").value,
@@ -277,6 +295,7 @@ entryForm.addEventListener("submit", async (e) => {
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,
     distance_nm: Number(document.getElementById("f-distance").value),
+    duration_hours: durationValue === "" ? null : Number(durationValue),
     night_hours: nightHoursValue === "" ? null : Number(nightHoursValue),
     notes: document.getElementById("f-notes").value.trim() || null,
   };
@@ -397,6 +416,7 @@ gpxFileInput.addEventListener("change", async () => {
     if (lastTime) {
       document.getElementById("f-end-time").value = formatTimeForInput(lastTime);
     }
+    calculateDuration();
     document.getElementById("f-distance").value = totalNm.toFixed(1);
 
     const nightHours = estimateNightHours(points);

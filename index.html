@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
 
@@ -118,10 +118,15 @@
           <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
         </div>
 
+        <div class="form-row">
+          <label for="f-distance">Distance (nm)</label>
+          <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62" autocomplete="off">
+        </div>
+
         <div class="form-row two-col">
           <div>
-            <label for="f-distance">Distance (nm)</label>
-            <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62" autocomplete="off">
+            <label for="f-duration">Time (hrs) <span class="optional">(optional)</span></label>
+            <input type="number" id="f-duration" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4.5" autocomplete="off">
           </div>
           <div>
             <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
@@ -229,6 +234,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=18"></script>
+  <script type="module" src="app.js?v=19"></script>
 </body>
 </html>
