@@ -796,6 +796,23 @@ function formatTimeForInput(date) {
   return `${h}:${m}`;
 }
 
+// Reverse-geocodes a coordinate into a place name via OpenStreetMap's free
+// Nominatim service (no API key/account needed). Best-effort only: any
+// failure or empty result just means the field stays blank, same as before
+// this existed - it never blocks the rest of the GPX import.
+async function reverseGeocodePlace(lat, lon) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`;
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const addr = data.address || {};
+    return addr.town || addr.village || addr.suburb || addr.city || addr.hamlet || addr.county || null;
+  } catch (err) {
+    return null;
+  }
+}
+
 gpxImportBtn.addEventListener("click", () => gpxFileInput.click());
 
 gpxFileInput.addEventListener("change", async () => {
@@ -832,6 +849,27 @@ gpxFileInput.addEventListener("change", async () => {
     const importedLabel = document.getElementById("gpx-imported-label");
     importedLabel.textContent = `Imported from: ${file.name}`;
     importedLabel.hidden = false;
+
+    const fromInput = document.getElementById("f-from");
+    const toInput = document.getElementById("f-to");
+    const needsFrom = !fromInput.value.trim();
+    const needsTo = !toInput.value.trim();
+
+    if (needsFrom || needsTo) {
+      importedLabel.textContent = `Imported from: ${file.name} — looking up place names...`;
+
+      if (needsFrom) {
+        const place = await reverseGeocodePlace(points[0].lat, points[0].lon);
+        if (place) fromInput.value = place;
+      }
+      if (needsTo) {
+        const lastPoint = points[points.length - 1];
+        const place = await reverseGeocodePlace(lastPoint.lat, lastPoint.lon);
+        if (place) toInput.value = place;
+      }
+
+      importedLabel.textContent = `Imported from: ${file.name}`;
+    }
   } catch (err) {
     alert(`Could not import that GPX file: ${err.message}`);
   } finally {
