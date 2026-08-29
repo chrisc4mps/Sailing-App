@@ -361,6 +361,40 @@ input:focus, select:focus, textarea:focus {
   outline-offset: 1px;
 }
 
+.autocomplete {
+  position: relative;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-height: 190px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(10, 31, 68, 0.12);
+}
+
+.suggestions li {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.suggestions li:last-child {
+  border-bottom: none;
+}
+
+.suggestions li:active {
+  background: #eef1f6;
+}
+
 .chip-input {
   display: flex;
   gap: 0.5rem;

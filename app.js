@@ -290,16 +290,48 @@ async function loadLogs() {
   updateAutocompleteLists(data);
 }
 
-const yachtNameList = document.getElementById("yacht-name-list");
-const skipperList = document.getElementById("skipper-list");
+let knownYachtNames = [];
+let knownSkippers = [];
 
 function updateAutocompleteLists(entries) {
-  const yachtNames = [...new Set(entries.map((e) => e.yacht_name).filter(Boolean))].sort();
-  const skippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
-
-  yachtNameList.innerHTML = yachtNames.map((name) => `<option value="${escapeHtml(name)}">`).join("");
-  skipperList.innerHTML = skippers.map((name) => `<option value="${escapeHtml(name)}">`).join("");
+  knownYachtNames = [...new Set(entries.map((e) => e.yacht_name).filter(Boolean))].sort();
+  knownSkippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
 }
+
+function setupAutocomplete(input, listEl, getOptions) {
+  function render() {
+    const filterText = input.value.trim().toLowerCase();
+    const options = getOptions().filter((o) => o.toLowerCase().includes(filterText));
+
+    if (!options.length) {
+      listEl.hidden = true;
+      listEl.innerHTML = "";
+      return;
+    }
+
+    listEl.innerHTML = options.map((o) => `<li>${escapeHtml(o)}</li>`).join("");
+    listEl.hidden = false;
+  }
+
+  input.addEventListener("focus", render);
+  input.addEventListener("input", render);
+  input.addEventListener("blur", () => {
+    listEl.hidden = true;
+  });
+
+  // mousedown (not click) fires before the input's blur, so the value is
+  // captured before the suggestion list disappears.
+  listEl.addEventListener("mousedown", (e) => {
+    const li = e.target.closest("li");
+    if (!li) return;
+    e.preventDefault();
+    input.value = li.textContent;
+    listEl.hidden = true;
+  });
+}
+
+setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames);
+setupAutocomplete(document.getElementById("f-skipper"), document.getElementById("skipper-suggestions"), () => knownSkippers);
 
 const SWIPE_OPEN_X = -88;
 let openSwipeCard = null;
