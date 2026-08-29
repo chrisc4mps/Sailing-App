@@ -304,6 +304,10 @@ input, select, textarea {
   background: var(--navy-dark);
 }
 
+#entry-form #share-log-btn {
+  margin-top: 0.75rem;
+}
+
 /* ---- Entry form ---- */
 #entry-form {
   padding: 1rem 1rem 3rem;

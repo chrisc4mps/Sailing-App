@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
 
@@ -90,10 +90,6 @@
           <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
           <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
           <p id="gpx-imported-label" class="gpx-imported-label" hidden></p>
-        </div>
-
-        <div class="gpx-import" id="share-log-row" hidden>
-          <button type="button" id="share-log-btn" class="link-button">Share this log</button>
         </div>
 
         <div class="form-row">
@@ -207,6 +203,7 @@
         </div>
 
         <button type="submit" class="primary-btn" id="save-btn">Save Log</button>
+        <button type="button" class="primary-btn" id="share-log-btn" hidden>Share this log</button>
       </form>
     </section>
 
@@ -254,6 +251,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=24"></script>
+  <script type="module" src="app.js?v=25"></script>
 </body>
 </html>

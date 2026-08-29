@@ -283,7 +283,7 @@ function resetForm() {
   editingId = null;
   document.getElementById("f-date").value = new Date().toISOString().slice(0, 10);
   document.getElementById("gpx-imported-label").hidden = true;
-  document.getElementById("share-log-row").hidden = true;
+  document.getElementById("share-log-btn").hidden = true;
 }
 
 addLogBtn.addEventListener("click", () => {
@@ -299,7 +299,7 @@ formBackBtn.addEventListener("click", () => {
 function openEntry(entry) {
   editingId = entry.id;
   document.getElementById("gpx-imported-label").hidden = true;
-  document.getElementById("share-log-row").hidden = false;
+  document.getElementById("share-log-btn").hidden = false;
   document.getElementById("f-date").value = entry.date;
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
@@ -322,7 +322,6 @@ function openEntry(entry) {
   showForm();
 }
 
-const shareLogRow = document.getElementById("share-log-row");
 const shareLogBtn = document.getElementById("share-log-btn");
 
 shareLogBtn.addEventListener("click", async () => {
