@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 
@@ -45,7 +45,10 @@
           <p id="header-email" class="header-line1" hidden></p>
           <button type="button" id="profile-link" class="profile-link"></button>
         </div>
-        <button type="button" id="sign-out" class="link-button">Sign out</button>
+        <div class="header-actions">
+          <button type="button" id="share-btn" class="link-button">Share</button>
+          <button type="button" id="sign-out" class="link-button">Sign out</button>
+        </div>
       </header>
 
       <div class="totals-grid">
@@ -213,7 +216,19 @@
 
   </div>
 
+  <!-- Share overlay -->
+  <div id="share-overlay" class="overlay" hidden>
+    <div class="overlay-box">
+      <h2>Share this app</h2>
+      <p class="tagline">Scan this to open the Sailing Logbook.</p>
+      <div id="qr-code" class="qr-code"></div>
+      <p id="share-url" class="share-url"></p>
+      <button type="button" id="share-close-btn" class="primary-btn">Close</button>
+    </div>
+  </div>
+
   <script src="vendor/supabase.js"></script>
-  <script type="module" src="app.js?v=17"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script type="module" src="app.js?v=18"></script>
 </body>
 </html>

@@ -87,6 +87,27 @@ signOutBtn.addEventListener("click", async () => {
   await supabase.auth.signOut();
 });
 
+// ---- Share ----
+const shareBtn = document.getElementById("share-btn");
+const shareOverlay = document.getElementById("share-overlay");
+const shareCloseBtn = document.getElementById("share-close-btn");
+const qrCodeContainer = document.getElementById("qr-code");
+const shareUrlText = document.getElementById("share-url");
+
+shareBtn.addEventListener("click", () => {
+  const url = window.location.origin + window.location.pathname;
+  const qr = qrcode(0, "M");
+  qr.addData(url);
+  qr.make();
+  qrCodeContainer.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2 });
+  shareUrlText.textContent = url;
+  shareOverlay.hidden = false;
+});
+
+shareCloseBtn.addEventListener("click", () => {
+  shareOverlay.hidden = true;
+});
+
 supabase.auth.onAuthStateChange((_event, session) => {
   if (session) {
     showApp();
