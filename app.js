@@ -2,6 +2,25 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./config.js";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ---- Shared log link (captured before auth may strip the query string) ----
+const SHARED_LOG_STORAGE_KEY = "sailing-logbook-pending-shared-log";
+
+function encodeShareData(data) {
+  return btoa(encodeURIComponent(JSON.stringify(data)));
+}
+
+function decodeShareData(encoded) {
+  return JSON.parse(decodeURIComponent(atob(encoded)));
+}
+
+(function capturePendingSharedLog() {
+  const params = new URLSearchParams(window.location.search);
+  const shared = params.get("shared");
+  if (!shared) return;
+  localStorage.setItem(SHARED_LOG_STORAGE_KEY, shared);
+  window.history.replaceState(null, "", window.location.pathname);
+})();
+
 // ---- Screens ----
 const viewAuth = document.getElementById("view-auth");
 const viewApp = document.getElementById("view-app");
@@ -91,17 +110,25 @@ signOutBtn.addEventListener("click", async () => {
 const shareBtn = document.getElementById("share-btn");
 const shareOverlay = document.getElementById("share-overlay");
 const shareCloseBtn = document.getElementById("share-close-btn");
+const shareTitleEl = document.getElementById("share-title");
+const shareMessageEl = document.getElementById("share-message");
 const qrCodeContainer = document.getElementById("qr-code");
 const shareUrlText = document.getElementById("share-url");
 
-shareBtn.addEventListener("click", () => {
-  const url = window.location.origin + window.location.pathname;
+function openShareOverlay(url, title, message) {
   const qr = qrcode(0, "M");
   qr.addData(url);
   qr.make();
   qrCodeContainer.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2 });
   shareUrlText.textContent = url;
+  shareTitleEl.textContent = title;
+  shareMessageEl.textContent = message;
   shareOverlay.hidden = false;
+}
+
+shareBtn.addEventListener("click", () => {
+  const url = window.location.origin + window.location.pathname;
+  openShareOverlay(url, "Share this app", "Scan this to open the Sailing Logbook.");
 });
 
 shareCloseBtn.addEventListener("click", () => {
@@ -113,6 +140,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
     showApp();
     updateProfileDisplay(session.user);
     loadLogs();
+    applyPendingSharedLogIfAny();
   } else {
     showAuth();
   }
@@ -255,6 +283,7 @@ function resetForm() {
   editingId = null;
   document.getElementById("f-date").value = new Date().toISOString().slice(0, 10);
   document.getElementById("gpx-imported-label").hidden = true;
+  document.getElementById("share-log-row").hidden = true;
 }
 
 addLogBtn.addEventListener("click", () => {
@@ -270,6 +299,7 @@ formBackBtn.addEventListener("click", () => {
 function openEntry(entry) {
   editingId = entry.id;
   document.getElementById("gpx-imported-label").hidden = true;
+  document.getElementById("share-log-row").hidden = false;
   document.getElementById("f-date").value = entry.date;
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
@@ -289,6 +319,79 @@ function openEntry(entry) {
   document.getElementById("f-notes").value = entry.notes || "";
 
   formTitle.textContent = "Edit Log";
+  showForm();
+}
+
+const shareLogRow = document.getElementById("share-log-row");
+const shareLogBtn = document.getElementById("share-log-btn");
+
+shareLogBtn.addEventListener("click", async () => {
+  const payload = {
+    date: document.getElementById("f-date").value || null,
+    start_time: document.getElementById("f-start-time").value || null,
+    end_time: document.getElementById("f-end-time").value || null,
+    type: document.getElementById("f-type").value || null,
+    from: document.getElementById("f-from").value.trim() || null,
+    to: document.getElementById("f-to").value.trim() || null,
+    distance_nm: document.getElementById("f-distance").value || null,
+    duration_hours: document.getElementById("f-duration").value || null,
+    night_hours: document.getElementById("f-night-hours").value || null,
+    yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
+    length_ft: document.getElementById("f-length-ft").value || null,
+    length_m: document.getElementById("f-length-m").value || null,
+    skipper: document.getElementById("f-skipper").value.trim() || null,
+    crew: currentCrew,
+    notes: document.getElementById("f-notes").value.trim() || null,
+  };
+
+  const url = `${window.location.origin}${window.location.pathname}?shared=${encodeShareData(payload)}`;
+  const shareText = `${payload.from || "?"} → ${payload.to || "?"} — open in Sailing Logbook to add this to your own log.`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: "Sailing Logbook entry", text: shareText, url });
+    } catch (err) {
+      // User cancelled the share sheet - nothing to do.
+    }
+  } else {
+    openShareOverlay(url, "Share this log", shareText);
+  }
+});
+
+function applyPendingSharedLogIfAny() {
+  const raw = localStorage.getItem(SHARED_LOG_STORAGE_KEY);
+  if (!raw) return;
+  localStorage.removeItem(SHARED_LOG_STORAGE_KEY);
+
+  let data;
+  try {
+    data = decodeShareData(raw);
+  } catch (err) {
+    return;
+  }
+
+  resetForm();
+
+  if (data.date) document.getElementById("f-date").value = data.date;
+  if (data.start_time) document.getElementById("f-start-time").value = data.start_time;
+  if (data.end_time) document.getElementById("f-end-time").value = data.end_time;
+  if (data.type) document.getElementById("f-type").value = data.type;
+  if (data.from) document.getElementById("f-from").value = data.from;
+  if (data.to) document.getElementById("f-to").value = data.to;
+  if (data.distance_nm) document.getElementById("f-distance").value = data.distance_nm;
+  if (data.duration_hours) document.getElementById("f-duration").value = data.duration_hours;
+  if (data.night_hours) document.getElementById("f-night-hours").value = data.night_hours;
+  if (data.yacht_name) document.getElementById("f-yacht-name").value = data.yacht_name;
+  if (data.length_ft) document.getElementById("f-length-ft").value = data.length_ft;
+  if (data.length_m) document.getElementById("f-length-m").value = data.length_m;
+  if (data.skipper) document.getElementById("f-skipper").value = data.skipper;
+  if (Array.isArray(data.crew) && data.crew.length) {
+    currentCrew = [...data.crew];
+    renderCrewChips();
+  }
+  if (data.notes) document.getElementById("f-notes").value = data.notes;
+
+  formTitle.textContent = "Add Log";
   showForm();
 }
 
@@ -723,6 +826,7 @@ if (session) {
   showApp();
   updateProfileDisplay(session.user);
   loadLogs();
+  applyPendingSharedLogIfAny();
 } else {
   showAuth();
 }

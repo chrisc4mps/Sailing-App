@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=23">
+  <link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 
@@ -90,6 +90,10 @@
           <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
           <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
           <p id="gpx-imported-label" class="gpx-imported-label" hidden></p>
+        </div>
+
+        <div class="gpx-import" id="share-log-row" hidden>
+          <button type="button" id="share-log-btn" class="link-button">Share this log</button>
         </div>
 
         <div class="form-row">
@@ -240,8 +244,8 @@
   <!-- Share overlay -->
   <div id="share-overlay" class="overlay" hidden>
     <div class="overlay-box">
-      <h2>Share this app</h2>
-      <p class="tagline">Scan this to open the Sailing Logbook.</p>
+      <h2 id="share-title">Share this app</h2>
+      <p class="tagline" id="share-message">Scan this to open the Sailing Logbook.</p>
       <div id="qr-code" class="qr-code"></div>
       <p id="share-url" class="share-url"></p>
       <button type="button" id="share-close-btn" class="primary-btn">Close</button>
@@ -250,6 +254,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=23"></script>
+  <script type="module" src="app.js?v=24"></script>
 </body>
 </html>
