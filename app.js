@@ -224,7 +224,6 @@ function openEntry(entry) {
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
   document.getElementById("f-role").value = entry.my_role;
-  document.getElementById("f-wind").value = entry.max_wind_force ?? "";
   document.getElementById("f-distance").value = entry.distance_nm;
   document.getElementById("f-night-hours").value = entry.night_hours ?? "";
   document.getElementById("f-notes").value = entry.notes || "";
@@ -238,7 +237,6 @@ entryForm.addEventListener("submit", async (e) => {
   const saveBtn = document.getElementById("save-btn");
   saveBtn.disabled = true;
 
-  const windValue = document.getElementById("f-wind").value;
   const nightHoursValue = document.getElementById("f-night-hours").value;
 
   const record = {
@@ -251,7 +249,6 @@ entryForm.addEventListener("submit", async (e) => {
     skipper: document.getElementById("f-skipper").value.trim(),
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,
-    max_wind_force: windValue === "" ? null : Number(windValue),
     distance_nm: Number(document.getElementById("f-distance").value),
     night_hours: nightHoursValue === "" ? null : Number(nightHoursValue),
     notes: document.getElementById("f-notes").value.trim() || null,

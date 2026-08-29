@@ -18,6 +18,7 @@
 
 html, body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -316,8 +317,17 @@ input, select, textarea {
 
 .form-row.two-col > div {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.form-section-heading {
+  font-size: 1rem;
+  color: var(--navy);
+  margin: 0.5rem 0 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
 }
 
 .form-row label {
