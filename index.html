@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <title>Sailing Logbook</title>
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=32">
 </head>
 <body>
 
@@ -175,6 +175,14 @@
         <h2 class="form-section-heading">More details</h2>
 
         <div class="form-row">
+          <label for="f-trip-name">Trip name <span class="optional">(optional)</span></label>
+          <div class="autocomplete">
+            <input type="text" id="f-trip-name" placeholder="e.g. August Bank Holiday" autocomplete="off">
+            <ul id="trip-name-suggestions" class="suggestions" hidden></ul>
+          </div>
+        </div>
+
+        <div class="form-row">
           <label for="f-type">Type</label>
           <select id="f-type" required>
             <option value="Cruise">Cruise</option>
@@ -273,6 +281,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=31"></script>
+  <script type="module" src="app.js?v=32"></script>
 </body>
 </html>

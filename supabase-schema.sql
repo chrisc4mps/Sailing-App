@@ -8,6 +8,7 @@ create table if not exists public.logs (
   date date not null,
   start_time time,
   end_time time,
+  trip_name text,
   type text not null check (type in ('Cruise', 'Race', 'Delivery')),
   from_location text not null,
   to_location text not null,

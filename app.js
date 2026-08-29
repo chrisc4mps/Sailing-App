@@ -539,6 +539,7 @@ function openEntry(entry) {
   document.getElementById("f-date").value = entry.date;
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
+  document.getElementById("f-trip-name").value = entry.trip_name || "";
   document.getElementById("f-type").value = entry.type;
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
@@ -634,6 +635,7 @@ entryForm.addEventListener("submit", async (e) => {
     date: document.getElementById("f-date").value,
     start_time: document.getElementById("f-start-time").value || null,
     end_time: document.getElementById("f-end-time").value || null,
+    trip_name: document.getElementById("f-trip-name").value.trim() || null,
     type: document.getElementById("f-type").value,
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
@@ -808,6 +810,7 @@ let knownYachtNames = [];
 let knownSkippers = [];
 let knownFromLocations = [];
 let knownToLocations = [];
+let knownTripNames = [];
 let knownYachtLengths = {};
 
 function updateAutocompleteLists(entries) {
@@ -815,6 +818,7 @@ function updateAutocompleteLists(entries) {
   knownSkippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
   knownFromLocations = [...new Set(entries.map((e) => e.from_location).filter(Boolean))].sort();
   knownToLocations = [...new Set(entries.map((e) => e.to_location).filter(Boolean))].sort();
+  knownTripNames = [...new Set(entries.map((e) => e.trip_name).filter(Boolean))].sort();
 
   // entries are newest-first, so the first match per yacht is its most
   // recently recorded length.
@@ -875,6 +879,7 @@ function setupAutocomplete(input, listEl, getOptions, onSelect) {
   });
 }
 
+setupAutocomplete(document.getElementById("f-trip-name"), document.getElementById("trip-name-suggestions"), () => knownTripNames);
 setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames, applyKnownYachtLength);
 setupAutocomplete(document.getElementById("f-skipper"), document.getElementById("skipper-suggestions"), () => knownSkippers);
 setupAutocomplete(document.getElementById("f-from"), document.getElementById("from-suggestions"), () => knownFromLocations);
@@ -888,7 +893,17 @@ function renderLogList(entries) {
   emptyState.hidden = entries.length > 0;
   openSwipeCard = null;
 
+  let lastTripName = null;
+
   for (const entry of entries) {
+    if (entry.trip_name && entry.trip_name !== lastTripName) {
+      const headingLi = document.createElement("li");
+      headingLi.className = "trip-heading-item";
+      headingLi.innerHTML = `<h3 class="trip-heading">${escapeHtml(entry.trip_name)}</h3>`;
+      logList.appendChild(headingLi);
+    }
+    lastTripName = entry.trip_name || null;
+
     const li = document.createElement("li");
     li.className = "log-item";
 
