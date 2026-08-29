@@ -224,7 +224,7 @@ const lengthMInput = document.getElementById("f-length-m");
 
 lengthFtInput.addEventListener("input", () => {
   const ft = parseFloat(lengthFtInput.value);
-  lengthMInput.value = Number.isFinite(ft) ? (ft / FT_PER_M).toFixed(2) : "";
+  lengthMInput.value = Number.isFinite(ft) ? (ft / FT_PER_M).toFixed(1) : "";
 });
 
 lengthMInput.addEventListener("input", () => {
@@ -278,7 +278,7 @@ function openEntry(entry) {
   document.getElementById("f-to").value = entry.to_location;
   document.getElementById("f-yacht-name").value = entry.yacht_name;
   if (entry.length_m != null) {
-    document.getElementById("f-length-m").value = entry.length_m;
+    document.getElementById("f-length-m").value = Number(entry.length_m).toFixed(1);
     document.getElementById("f-length-ft").value = (entry.length_m * FT_PER_M).toFixed(1);
   } else {
     document.getElementById("f-length-m").value = "";
