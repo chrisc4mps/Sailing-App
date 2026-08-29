@@ -1157,9 +1157,12 @@ function formatNumber(n) {
   return Number.isInteger(n) ? n : n.toFixed(1);
 }
 
+const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 function formatDate(isoDate) {
-  const [year, month, day] = isoDate.split("-");
-  return `${day}/${month}/${year}`;
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const weekday = WEEKDAY_NAMES[new Date(Date.UTC(year, month - 1, day)).getUTCDay()];
+  return `${weekday} ${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
 }
 
 function escapeHtml(str) {
