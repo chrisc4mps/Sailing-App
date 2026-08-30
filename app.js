@@ -1255,8 +1255,6 @@ function renderTotals() {
   const qualifyingDays = entries.reduce((sum, e) => sum + Number(e.qualifying_days || 0), 0);
   const totalNightHours = entries.reduce((sum, e) => sum + Number(e.night_hours || 0), 0);
   const skipperDays = entries.filter((e) => e.my_role === "Skipper").reduce((sum, e) => sum + Number(e.days || 1), 0);
-  const tidalDays = entries.filter((e) => e.waters === "Tidal").reduce((sum, e) => sum + Number(e.days || 1), 0);
-  const nonTidalDays = entries.filter((e) => e.waters === "Non-tidal").reduce((sum, e) => sum + Number(e.days || 1), 0);
 
   document.getElementById("stat-nm").textContent = formatNumber(totalNm);
   document.getElementById("stat-tidal-nm").textContent = formatNumber(tidalNm);
@@ -1265,8 +1263,6 @@ function renderTotals() {
   document.getElementById("stat-qualifying-days").textContent = qualifyingDays;
   document.getElementById("stat-night-hours").textContent = formatNumber(totalNightHours);
   document.getElementById("stat-skipper-days").textContent = skipperDays;
-  document.getElementById("stat-tidal-days").textContent = tidalDays;
-  document.getElementById("stat-non-tidal-days").textContent = nonTidalDays;
 }
 
 function formatNumber(n) {
