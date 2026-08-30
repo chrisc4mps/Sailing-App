@@ -1249,6 +1249,8 @@ function renderTotals() {
   const entries = totalsScope === "year" ? currentEntries.filter((e) => e.date?.slice(0, 4) === currentYear) : currentEntries;
 
   const totalNm = entries.reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
+  const tidalNm = entries.filter((e) => e.waters === "Tidal").reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
+  const nonTidalNm = entries.filter((e) => e.waters === "Non-tidal").reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
   const totalDays = entries.reduce((sum, e) => sum + Number(e.days || 1), 0);
   const qualifyingDays = entries.reduce((sum, e) => sum + Number(e.qualifying_days || 0), 0);
   const totalNightHours = entries.reduce((sum, e) => sum + Number(e.night_hours || 0), 0);
@@ -1257,6 +1259,8 @@ function renderTotals() {
   const nonTidalDays = entries.filter((e) => e.waters === "Non-tidal").reduce((sum, e) => sum + Number(e.days || 1), 0);
 
   document.getElementById("stat-nm").textContent = formatNumber(totalNm);
+  document.getElementById("stat-tidal-nm").textContent = formatNumber(tidalNm);
+  document.getElementById("stat-non-tidal-nm").textContent = formatNumber(nonTidalNm);
   document.getElementById("stat-days").textContent = totalDays;
   document.getElementById("stat-qualifying-days").textContent = qualifyingDays;
   document.getElementById("stat-night-hours").textContent = formatNumber(totalNightHours);
