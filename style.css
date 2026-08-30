@@ -127,6 +127,36 @@ input, select, textarea {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: 4.5rem;
+}
+
+.bottom-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
+}
+
+.bottom-tab {
+  flex: 1;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--navy-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.bottom-tab.active {
+  color: var(--navy);
 }
 
 .app-header {
@@ -353,10 +383,10 @@ input, select, textarea {
 /* ---- Bottom action bar ---- */
 .bottom-bar {
   position: fixed;
-  bottom: 0;
+  bottom: calc(4rem + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
-  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  padding: 0.75rem 1rem;
   background: linear-gradient(to top, var(--bg) 60%, transparent);
 }
 

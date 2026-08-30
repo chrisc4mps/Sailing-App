@@ -24,9 +24,14 @@ function decodeShareData(encoded) {
 // ---- Screens ----
 const viewAuth = document.getElementById("view-auth");
 const viewApp = document.getElementById("view-app");
+const viewDashboard = document.getElementById("view-dashboard");
 const viewLogbook = document.getElementById("view-logbook");
 const viewForm = document.getElementById("view-form");
 const viewProfile = document.getElementById("view-profile");
+const bottomTabs = document.getElementById("bottom-tabs");
+const tabDashboard = document.getElementById("tab-dashboard");
+const tabLogbook = document.getElementById("tab-logbook");
+const tabProfile = document.getElementById("tab-profile");
 
 function showAuth() {
   viewAuth.hidden = false;
@@ -36,26 +41,53 @@ function showAuth() {
 function showApp() {
   viewAuth.hidden = true;
   viewApp.hidden = false;
-  showLogbook();
+  showDashboard();
+}
+
+function setActiveTab(tab) {
+  tabDashboard.classList.toggle("active", tab === "dashboard");
+  tabLogbook.classList.toggle("active", tab === "logbook");
+  tabProfile.classList.toggle("active", tab === "profile");
+}
+
+function showDashboard() {
+  viewDashboard.hidden = false;
+  viewLogbook.hidden = true;
+  viewForm.hidden = true;
+  viewProfile.hidden = true;
+  bottomTabs.hidden = false;
+  setActiveTab("dashboard");
 }
 
 function showLogbook() {
+  viewDashboard.hidden = true;
   viewLogbook.hidden = false;
   viewForm.hidden = true;
   viewProfile.hidden = true;
+  bottomTabs.hidden = false;
+  setActiveTab("logbook");
 }
 
 function showForm() {
+  viewDashboard.hidden = true;
   viewLogbook.hidden = true;
   viewForm.hidden = false;
   viewProfile.hidden = true;
+  bottomTabs.hidden = true;
 }
 
 function showProfile() {
+  viewDashboard.hidden = true;
   viewLogbook.hidden = true;
   viewForm.hidden = true;
   viewProfile.hidden = false;
+  bottomTabs.hidden = false;
+  setActiveTab("profile");
 }
+
+tabDashboard.addEventListener("click", showDashboard);
+tabLogbook.addEventListener("click", showLogbook);
+tabProfile.addEventListener("click", showProfile);
 
 // ---- Auth ----
 const loginForm = document.getElementById("login-form");
@@ -229,7 +261,7 @@ function updateProfileDisplay(user) {
 }
 
 profileLink.addEventListener("click", showProfile);
-profileBackBtn.addEventListener("click", showLogbook);
+profileBackBtn.addEventListener("click", showDashboard);
 
 profileForm.addEventListener("submit", async (e) => {
   e.preventDefault();

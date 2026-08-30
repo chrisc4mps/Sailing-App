@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=63">
+  <link rel="stylesheet" href="style.css?v=64">
 </head>
 <body>
 
@@ -48,8 +48,8 @@
   <!-- Main app -->
   <div id="view-app" class="screen" hidden>
 
-    <!-- Logbook (list) screen -->
-    <section id="view-logbook" class="app-screen">
+    <!-- Dashboard screen -->
+    <section id="view-dashboard" class="app-screen">
       <header class="app-header">
         <div>
           <h1>Sailing Logbook</h1>
@@ -86,6 +86,13 @@
           <span class="stat-label">Days as skipper</span>
         </div>
       </div>
+    </section>
+
+    <!-- Logbook (list) screen -->
+    <section id="view-logbook" class="app-screen" hidden>
+      <header class="app-header">
+        <h1>Logbook</h1>
+      </header>
 
       <ul id="log-list"></ul>
       <p id="empty-state" class="empty-state" hidden>No entries yet. Tap "+ Add Log" to log your first trip.</p>
@@ -325,6 +332,13 @@
       </div>
     </section>
 
+    <!-- Bottom tab bar -->
+    <nav id="bottom-tabs" class="bottom-tabs">
+      <button type="button" id="tab-dashboard" class="bottom-tab active">Dashboard</button>
+      <button type="button" id="tab-logbook" class="bottom-tab">Logbook</button>
+      <button type="button" id="tab-profile" class="bottom-tab">Profile</button>
+    </nav>
+
   </div>
 
   <!-- Share overlay -->
@@ -350,6 +364,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=63"></script>
+  <script type="module" src="app.js?v=64"></script>
 </body>
 </html>
