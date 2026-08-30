@@ -26,6 +26,7 @@ create table if not exists public.logs (
   max_wind_force smallint check (max_wind_force between 0 and 12),
   distance_nm numeric(6, 1) not null check (distance_nm >= 0),
   days smallint not null default 1 check (days >= 1),
+  qualifying_days smallint check (qualifying_days >= 0),
   duration_hours numeric(5, 1) check (duration_hours >= 0),
   night_hours numeric(4, 1) check (night_hours >= 0),
   notes text,

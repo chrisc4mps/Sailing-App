@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=65">
+  <link rel="stylesheet" href="style.css?v=66">
 </head>
 <body>
 
@@ -76,6 +76,10 @@
         <div class="stat-tile">
           <span class="stat-value" id="stat-days">0</span>
           <span class="stat-label">Sailing days</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-value" id="stat-qualifying-days">0</span>
+          <span class="stat-label">Qualifying days</span>
         </div>
         <div class="stat-tile">
           <span class="stat-value" id="stat-night-hours">0</span>
@@ -190,6 +194,11 @@
         <div class="form-row">
           <label for="f-days">Days on board</label>
           <input type="number" id="f-days" class="calculated-field" inputmode="numeric" min="1" step="1" value="1" required autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <label for="f-qualifying-days">Qualifying days on board <span class="optional">(optional)</span></label>
+          <input type="number" id="f-qualifying-days" inputmode="numeric" min="0" step="1" placeholder="e.g. 2" autocomplete="off">
         </div>
 
         <div class="form-row">
@@ -372,6 +381,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=65"></script>
+  <script type="module" src="app.js?v=66"></script>
 </body>
 </html>
