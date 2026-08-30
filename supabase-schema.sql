@@ -18,6 +18,7 @@ create table if not exists public.logs (
   yacht_type text,
   length_ft numeric(4, 1) check (length_ft >= 0),
   length_m numeric(4, 2) check (length_m >= 0),
+  propulsion text check (propulsion in ('Sail', 'Motor')),
   waters text check (waters in ('Tidal', 'Non-tidal')),
   skipper text,
   crew text[] not null default '{}',

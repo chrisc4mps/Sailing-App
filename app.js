@@ -646,6 +646,7 @@ function openEntry(entry) {
   document.getElementById("f-yacht-type").value = entry.yacht_type || "";
   document.getElementById("f-length-ft").value = entry.length_ft ?? "";
   document.getElementById("f-length-m").value = entry.length_m ?? "";
+  document.getElementById("f-propulsion").value = entry.propulsion || "";
   document.getElementById("f-waters").value = entry.waters || "";
   document.getElementById("f-wind-force").value = entry.max_wind_force ?? "";
   document.getElementById("f-skipper").value = entry.skipper || "";
@@ -681,6 +682,7 @@ shareLogBtn.addEventListener("click", () => {
     yacht_type: document.getElementById("f-yacht-type").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value || null,
     length_m: document.getElementById("f-length-m").value || null,
+    propulsion: document.getElementById("f-propulsion").value || null,
     waters: document.getElementById("f-waters").value || null,
     max_wind_force: document.getElementById("f-wind-force").value || null,
     skipper: document.getElementById("f-skipper").value.trim() || null,
@@ -725,6 +727,7 @@ function applyPendingSharedLogIfAny() {
   if (data.yacht_type) document.getElementById("f-yacht-type").value = data.yacht_type;
   if (data.length_ft) document.getElementById("f-length-ft").value = data.length_ft;
   if (data.length_m) document.getElementById("f-length-m").value = data.length_m;
+  if (data.propulsion) document.getElementById("f-propulsion").value = data.propulsion;
   if (data.waters) document.getElementById("f-waters").value = data.waters;
   if (data.max_wind_force) document.getElementById("f-wind-force").value = data.max_wind_force;
   if (data.skipper) document.getElementById("f-skipper").value = data.skipper;
@@ -760,6 +763,7 @@ entryForm.addEventListener("submit", async (e) => {
     yacht_type: document.getElementById("f-yacht-type").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
+    propulsion: document.getElementById("f-propulsion").value || null,
     waters: document.getElementById("f-waters").value || null,
     max_wind_force: document.getElementById("f-wind-force").value === "" ? null : Number(document.getElementById("f-wind-force").value),
     skipper: document.getElementById("f-skipper").value.trim() || null,

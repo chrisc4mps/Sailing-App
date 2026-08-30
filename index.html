@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=59">
+  <link rel="stylesheet" href="style.css?v=60">
 </head>
 <body>
 
@@ -227,7 +227,7 @@
         </div>
 
         <div class="form-row">
-          <label for="f-yacht-name">Yacht name <span class="optional">(optional)</span></label>
+          <label for="f-yacht-name">Name of vessel <span class="optional">(optional)</span></label>
           <div class="autocomplete">
             <input type="text" id="f-yacht-name" placeholder="e.g. Moonshadow" autocomplete="off">
             <ul id="yacht-name-suggestions" class="suggestions" hidden></ul>
@@ -235,7 +235,7 @@
         </div>
 
         <div class="form-row">
-          <label for="f-yacht-type">Yacht type <span class="optional">(optional)</span></label>
+          <label for="f-yacht-type">Vessel type <span class="optional">(optional)</span></label>
           <div class="autocomplete">
             <input type="text" id="f-yacht-type" placeholder="e.g. Bermudan Sloop" autocomplete="off">
             <ul id="yacht-type-suggestions" class="suggestions" hidden></ul>
@@ -251,6 +251,15 @@
             <label for="f-length-m">Length/LOA (m) <span class="optional">(optional)</span></label>
             <input type="number" id="f-length-m" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 10.7" autocomplete="off">
           </div>
+        </div>
+
+        <div class="form-row">
+          <label for="f-propulsion">Sail or Motor <span class="optional">(optional)</span></label>
+          <select id="f-propulsion">
+            <option value="">—</option>
+            <option value="Sail">Sail</option>
+            <option value="Motor">Motor</option>
+          </select>
         </div>
 
         <div class="form-row">
@@ -340,6 +349,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=59"></script>
+  <script type="module" src="app.js?v=60"></script>
 </body>
 </html>
