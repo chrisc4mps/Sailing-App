@@ -281,7 +281,11 @@ input, select, textarea {
 }
 
 .night-icon {
-  font-size: 0.8rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  fill: var(--navy);
+  opacity: 0.4;
+  vertical-align: -0.05em;
 }
 
 .log-route {
