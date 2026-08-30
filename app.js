@@ -622,6 +622,7 @@ function openEntry(entry) {
   document.getElementById("f-length-ft").value = entry.length_ft ?? "";
   document.getElementById("f-length-m").value = entry.length_m ?? "";
   document.getElementById("f-waters").value = entry.waters || "";
+  document.getElementById("f-wind-force").value = entry.max_wind_force ?? "";
   document.getElementById("f-skipper").value = entry.skipper || "";
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
@@ -653,6 +654,7 @@ shareLogBtn.addEventListener("click", () => {
     length_ft: document.getElementById("f-length-ft").value || null,
     length_m: document.getElementById("f-length-m").value || null,
     waters: document.getElementById("f-waters").value || null,
+    max_wind_force: document.getElementById("f-wind-force").value || null,
     skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
     notes: document.getElementById("f-notes").value.trim() || null,
@@ -693,6 +695,7 @@ function applyPendingSharedLogIfAny() {
   if (data.length_ft) document.getElementById("f-length-ft").value = data.length_ft;
   if (data.length_m) document.getElementById("f-length-m").value = data.length_m;
   if (data.waters) document.getElementById("f-waters").value = data.waters;
+  if (data.max_wind_force) document.getElementById("f-wind-force").value = data.max_wind_force;
   if (data.skipper) document.getElementById("f-skipper").value = data.skipper;
   if (Array.isArray(data.crew) && data.crew.length) {
     currentCrew = [...data.crew];
@@ -726,6 +729,7 @@ entryForm.addEventListener("submit", async (e) => {
     length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
     waters: document.getElementById("f-waters").value || null,
+    max_wind_force: document.getElementById("f-wind-force").value === "" ? null : Number(document.getElementById("f-wind-force").value),
     skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,
@@ -884,6 +888,9 @@ gpxFileInput.addEventListener("change", async () => {
 const logList = document.getElementById("log-list");
 const emptyState = document.getElementById("empty-state");
 
+let currentEntries = [];
+let totalsScope = "all";
+
 async function loadLogs() {
   const { data, error } = await supabase
     .from("logs")
@@ -896,9 +903,20 @@ async function loadLogs() {
     return;
   }
 
+  currentEntries = data;
   renderLogList(data);
-  renderTotals(data);
+  renderTotals();
   updateAutocompleteLists(data);
+}
+
+document.getElementById("totals-scope-all").addEventListener("click", () => setTotalsScope("all"));
+document.getElementById("totals-scope-year").addEventListener("click", () => setTotalsScope("year"));
+
+function setTotalsScope(scope) {
+  totalsScope = scope;
+  document.getElementById("totals-scope-all").classList.toggle("active", scope === "all");
+  document.getElementById("totals-scope-year").classList.toggle("active", scope === "year");
+  renderTotals();
 }
 
 let knownYachtNames = [];
@@ -1144,7 +1162,10 @@ async function deleteLog(id, listItem) {
   loadLogs();
 }
 
-function renderTotals(entries) {
+function renderTotals() {
+  const currentYear = String(new Date().getFullYear());
+  const entries = totalsScope === "year" ? currentEntries.filter((e) => e.date?.slice(0, 4) === currentYear) : currentEntries;
+
   const totalNm = entries.reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
   const totalDays = entries.length;
   const totalNightHours = entries.reduce((sum, e) => sum + Number(e.night_hours || 0), 0);

@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=53">
+  <link rel="stylesheet" href="style.css?v=54">
 </head>
 <body>
 
@@ -62,6 +62,11 @@
           <button type="button" id="sign-out" class="link-button">Sign out</button>
         </div>
       </header>
+
+      <div class="totals-scope">
+        <button type="button" id="totals-scope-all" class="totals-scope-btn active">All time</button>
+        <button type="button" id="totals-scope-year" class="totals-scope-btn">This year</button>
+      </div>
 
       <div class="totals-grid">
         <div class="stat-tile">
@@ -246,6 +251,11 @@
           </select>
         </div>
 
+        <div class="form-row">
+          <label for="f-wind-force">Max wind force (Beaufort) <span class="optional">(optional)</span></label>
+          <input type="number" id="f-wind-force" inputmode="numeric" min="0" max="12" step="1" placeholder="e.g. 5" autocomplete="off">
+        </div>
+
       </form>
     </section>
 
@@ -319,6 +329,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=53"></script>
+  <script type="module" src="app.js?v=54"></script>
 </body>
 </html>

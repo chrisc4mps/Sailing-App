@@ -177,6 +177,29 @@ input, select, textarea {
 }
 
 /* ---- Totals ---- */
+.totals-scope {
+  display: flex;
+  gap: 0.4rem;
+  padding: 1rem 1rem 0;
+}
+
+.totals-scope-btn {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy-muted);
+}
+
+.totals-scope-btn.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
 .totals-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
