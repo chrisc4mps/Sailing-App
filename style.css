@@ -230,6 +230,12 @@ input, select, textarea {
   color: #fff;
 }
 
+select.totals-scope-btn {
+  min-height: 0;
+  text-align: center;
+  text-align-last: center;
+}
+
 .stat-hero {
   background: var(--navy);
   border-radius: 10px;

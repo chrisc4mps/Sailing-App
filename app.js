@@ -981,17 +981,32 @@ async function loadLogs() {
 
   currentEntries = data;
   renderLogList(data);
+  populateYearPicker();
   renderTotals();
   updateAutocompleteLists(data);
 }
 
+function populateYearPicker() {
+  const picker = document.getElementById("totals-scope-picker");
+  const previousValue = picker.value;
+  const years = [...new Set(currentEntries.map((e) => e.date?.slice(0, 4)).filter(Boolean))].sort((a, b) => b - a);
+  picker.innerHTML = `<option value="">Year…</option>` + years.map((y) => `<option value="${y}">${y}</option>`).join("");
+  if (years.includes(previousValue)) picker.value = previousValue;
+}
+
 document.getElementById("totals-scope-all").addEventListener("click", () => setTotalsScope("all"));
-document.getElementById("totals-scope-year").addEventListener("click", () => setTotalsScope("year"));
+document.getElementById("totals-scope-year").addEventListener("click", () => setTotalsScope(String(new Date().getFullYear())));
+document.getElementById("totals-scope-picker").addEventListener("change", (e) => {
+  if (e.target.value) setTotalsScope(e.target.value);
+});
 
 function setTotalsScope(scope) {
   totalsScope = scope;
+  const currentYear = String(new Date().getFullYear());
   document.getElementById("totals-scope-all").classList.toggle("active", scope === "all");
-  document.getElementById("totals-scope-year").classList.toggle("active", scope === "year");
+  document.getElementById("totals-scope-year").classList.toggle("active", scope === currentYear);
+  const picker = document.getElementById("totals-scope-picker");
+  picker.value = scope !== "all" && scope !== currentYear ? scope : "";
   renderTotals();
 }
 
@@ -1245,8 +1260,7 @@ async function deleteLog(id, listItem) {
 }
 
 function renderTotals() {
-  const currentYear = String(new Date().getFullYear());
-  const entries = totalsScope === "year" ? currentEntries.filter((e) => e.date?.slice(0, 4) === currentYear) : currentEntries;
+  const entries = totalsScope === "all" ? currentEntries : currentEntries.filter((e) => e.date?.slice(0, 4) === totalsScope);
 
   const totalNm = entries.reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
   const tidalNm = entries.filter((e) => e.waters === "Tidal").reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
