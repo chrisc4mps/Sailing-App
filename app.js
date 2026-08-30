@@ -618,8 +618,10 @@ function openEntry(entry) {
   document.getElementById("f-from").value = entry.from_location;
   document.getElementById("f-to").value = entry.to_location;
   document.getElementById("f-yacht-name").value = entry.yacht_name || "";
+  document.getElementById("f-yacht-type").value = entry.yacht_type || "";
   document.getElementById("f-length-ft").value = entry.length_ft ?? "";
   document.getElementById("f-length-m").value = entry.length_m ?? "";
+  document.getElementById("f-waters").value = entry.waters || "";
   document.getElementById("f-skipper").value = entry.skipper || "";
   currentCrew = Array.isArray(entry.crew) ? [...entry.crew] : [];
   renderCrewChips();
@@ -647,8 +649,10 @@ shareLogBtn.addEventListener("click", () => {
     duration_hours: document.getElementById("f-duration").value || null,
     night_hours: document.getElementById("f-night-hours").value || null,
     yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
+    yacht_type: document.getElementById("f-yacht-type").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value || null,
     length_m: document.getElementById("f-length-m").value || null,
+    waters: document.getElementById("f-waters").value || null,
     skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
     notes: document.getElementById("f-notes").value.trim() || null,
@@ -685,8 +689,10 @@ function applyPendingSharedLogIfAny() {
   if (data.duration_hours) document.getElementById("f-duration").value = data.duration_hours;
   if (data.night_hours) document.getElementById("f-night-hours").value = data.night_hours;
   if (data.yacht_name) document.getElementById("f-yacht-name").value = data.yacht_name;
+  if (data.yacht_type) document.getElementById("f-yacht-type").value = data.yacht_type;
   if (data.length_ft) document.getElementById("f-length-ft").value = data.length_ft;
   if (data.length_m) document.getElementById("f-length-m").value = data.length_m;
+  if (data.waters) document.getElementById("f-waters").value = data.waters;
   if (data.skipper) document.getElementById("f-skipper").value = data.skipper;
   if (Array.isArray(data.crew) && data.crew.length) {
     currentCrew = [...data.crew];
@@ -716,8 +722,10 @@ entryForm.addEventListener("submit", async (e) => {
     from_location: document.getElementById("f-from").value.trim(),
     to_location: document.getElementById("f-to").value.trim(),
     yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
+    yacht_type: document.getElementById("f-yacht-type").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
+    waters: document.getElementById("f-waters").value || null,
     skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,
@@ -894,40 +902,45 @@ async function loadLogs() {
 }
 
 let knownYachtNames = [];
+let knownYachtTypes = [];
 let knownSkippers = [];
 let knownFromLocations = [];
 let knownToLocations = [];
 let knownTripNames = [];
-let knownYachtLengths = {};
+let knownYachtDetails = {};
 
 function updateAutocompleteLists(entries) {
   knownYachtNames = [...new Set(entries.map((e) => e.yacht_name).filter(Boolean))].sort();
+  knownYachtTypes = [...new Set(entries.map((e) => e.yacht_type).filter(Boolean))].sort();
   knownSkippers = [...new Set(entries.map((e) => e.skipper).filter(Boolean))].sort();
   knownFromLocations = [...new Set(entries.map((e) => e.from_location).filter(Boolean))].sort();
   knownToLocations = [...new Set(entries.map((e) => e.to_location).filter(Boolean))].sort();
   knownTripNames = [...new Set(entries.map((e) => e.trip_name).filter(Boolean))].sort();
 
   // entries are newest-first, so the first match per yacht is its most
-  // recently recorded length.
-  knownYachtLengths = {};
+  // recently recorded details.
+  knownYachtDetails = {};
   for (const e of entries) {
-    if (e.yacht_name && (e.length_ft != null || e.length_m != null)) {
+    if (e.yacht_name && (e.length_ft != null || e.length_m != null || e.yacht_type)) {
       const key = e.yacht_name.toLowerCase();
-      if (!(key in knownYachtLengths)) knownYachtLengths[key] = { ft: e.length_ft, m: e.length_m };
+      if (!(key in knownYachtDetails)) knownYachtDetails[key] = { ft: e.length_ft, m: e.length_m, type: e.yacht_type };
     }
   }
 }
 
-function applyKnownYachtLength(yachtName) {
-  const lengths = knownYachtLengths[yachtName.toLowerCase()];
-  if (!lengths) return;
+function applyKnownYachtDetails(yachtName) {
+  const details = knownYachtDetails[yachtName.toLowerCase()];
+  if (!details) return;
 
   const ftInput = document.getElementById("f-length-ft");
   const mInput = document.getElementById("f-length-m");
-  if (ftInput.value.trim() || mInput.value.trim()) return; // don't overwrite a value already entered
+  if (!ftInput.value.trim() && !mInput.value.trim()) {
+    if (details.ft != null) ftInput.value = details.ft;
+    if (details.m != null) mInput.value = details.m;
+  }
 
-  if (lengths.ft != null) ftInput.value = lengths.ft;
-  if (lengths.m != null) mInput.value = lengths.m;
+  const typeInput = document.getElementById("f-yacht-type");
+  if (!typeInput.value.trim() && details.type) typeInput.value = details.type;
 }
 
 function setupAutocomplete(input, listEl, getOptions, onSelect) {
@@ -967,7 +980,8 @@ function setupAutocomplete(input, listEl, getOptions, onSelect) {
 }
 
 setupAutocomplete(document.getElementById("f-trip-name"), document.getElementById("trip-name-suggestions"), () => knownTripNames);
-setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames, applyKnownYachtLength);
+setupAutocomplete(document.getElementById("f-yacht-name"), document.getElementById("yacht-name-suggestions"), () => knownYachtNames, applyKnownYachtDetails);
+setupAutocomplete(document.getElementById("f-yacht-type"), document.getElementById("yacht-type-suggestions"), () => knownYachtTypes);
 setupAutocomplete(document.getElementById("f-skipper"), document.getElementById("skipper-suggestions"), () => knownSkippers);
 setupAutocomplete(document.getElementById("f-from"), document.getElementById("from-suggestions"), () => knownFromLocations);
 setupAutocomplete(document.getElementById("f-to"), document.getElementById("to-suggestions"), () => knownToLocations);
