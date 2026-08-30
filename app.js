@@ -720,7 +720,7 @@ entryForm.addEventListener("submit", async (e) => {
     length_m: document.getElementById("f-length-m").value === "" ? null : Number(document.getElementById("f-length-m").value),
     skipper: document.getElementById("f-skipper").value.trim() || null,
     crew: currentCrew,
-    my_role: document.getElementById("f-role").value || null,
+    my_role: document.getElementById("f-role").value,
     distance_nm: Number(document.getElementById("f-distance").value),
     duration_hours: durationValue === "" ? null : Number(durationValue),
     night_hours: nightHoursValue === "" ? null : Number(nightHoursValue),
