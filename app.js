@@ -1044,7 +1044,10 @@ function renderLogList(entries) {
         <span class="log-nm">${entry.distance_nm} nm</span>
       </div>
       <div class="log-route">${escapeHtml(entry.from_location)} → ${escapeHtml(entry.to_location)}</div>
-      ${[entry.yacht_name, entry.my_role].filter(Boolean).length ? `<div class="log-meta">${[entry.yacht_name, entry.my_role].filter(Boolean).map(escapeHtml).join(" · ")}</div>` : ""}
+      <div class="log-meta">
+        <span class="log-yacht">${escapeHtml(entry.yacht_name || "")}</span>
+        <span class="log-role">${escapeHtml(entry.my_role || "")}</span>
+      </div>
     `;
     attachSwipeToDelete(card, entry);
 
