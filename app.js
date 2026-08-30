@@ -628,6 +628,7 @@ function openEntry(entry) {
   renderCrewChips();
   document.getElementById("f-role").value = entry.my_role || "";
   document.getElementById("f-distance").value = entry.distance_nm;
+  document.getElementById("f-days").value = entry.days ?? 1;
   document.getElementById("f-duration").value = entry.duration_hours ?? "";
   document.getElementById("f-night-hours").value = entry.night_hours ?? "";
   document.getElementById("f-notes").value = entry.notes || "";
@@ -647,6 +648,7 @@ shareLogBtn.addEventListener("click", () => {
     from: document.getElementById("f-from").value.trim() || null,
     to: document.getElementById("f-to").value.trim() || null,
     distance_nm: document.getElementById("f-distance").value || null,
+    days: document.getElementById("f-days").value || null,
     duration_hours: document.getElementById("f-duration").value || null,
     night_hours: document.getElementById("f-night-hours").value || null,
     yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
@@ -688,6 +690,7 @@ function applyPendingSharedLogIfAny() {
   if (data.from) document.getElementById("f-from").value = data.from;
   if (data.to) document.getElementById("f-to").value = data.to;
   if (data.distance_nm) document.getElementById("f-distance").value = data.distance_nm;
+  if (data.days) document.getElementById("f-days").value = data.days;
   if (data.duration_hours) document.getElementById("f-duration").value = data.duration_hours;
   if (data.night_hours) document.getElementById("f-night-hours").value = data.night_hours;
   if (data.yacht_name) document.getElementById("f-yacht-name").value = data.yacht_name;
@@ -734,6 +737,7 @@ entryForm.addEventListener("submit", async (e) => {
     crew: currentCrew,
     my_role: document.getElementById("f-role").value,
     distance_nm: Number(document.getElementById("f-distance").value),
+    days: Number(document.getElementById("f-days").value),
     duration_hours: durationValue === "" ? null : Number(durationValue),
     night_hours: nightHoursValue === "" ? null : Number(nightHoursValue),
     notes: document.getElementById("f-notes").value.trim() || null,
@@ -1167,9 +1171,9 @@ function renderTotals() {
   const entries = totalsScope === "year" ? currentEntries.filter((e) => e.date?.slice(0, 4) === currentYear) : currentEntries;
 
   const totalNm = entries.reduce((sum, e) => sum + Number(e.distance_nm || 0), 0);
-  const totalDays = entries.length;
+  const totalDays = entries.reduce((sum, e) => sum + Number(e.days || 1), 0);
   const totalNightHours = entries.reduce((sum, e) => sum + Number(e.night_hours || 0), 0);
-  const skipperDays = entries.filter((e) => e.my_role === "Skipper").length;
+  const skipperDays = entries.filter((e) => e.my_role === "Skipper").reduce((sum, e) => sum + Number(e.days || 1), 0);
 
   document.getElementById("stat-nm").textContent = formatNumber(totalNm);
   document.getElementById("stat-days").textContent = totalDays;
