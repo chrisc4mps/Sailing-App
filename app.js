@@ -640,8 +640,8 @@ function openEntry(entry) {
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
   document.getElementById("f-trip-name").value = entry.trip_name || "";
   document.getElementById("f-type").value = entry.type || "";
-  document.getElementById("f-from").value = entry.from_location;
-  document.getElementById("f-to").value = entry.to_location;
+  document.getElementById("f-from").value = entry.from_location || "";
+  document.getElementById("f-to").value = entry.to_location || "";
   document.getElementById("f-yacht-name").value = entry.yacht_name || "";
   document.getElementById("f-yacht-type").value = entry.yacht_type || "";
   document.getElementById("f-length-ft").value = entry.length_ft ?? "";
@@ -757,8 +757,8 @@ entryForm.addEventListener("submit", async (e) => {
     trip_name: document.getElementById("f-trip-name").value.trim() || null,
     gpx_filename: document.getElementById("f-gpx-filename").value || null,
     type: document.getElementById("f-type").value || null,
-    from_location: document.getElementById("f-from").value.trim(),
-    to_location: document.getElementById("f-to").value.trim(),
+    from_location: document.getElementById("f-from").value.trim() || null,
+    to_location: document.getElementById("f-to").value.trim() || null,
     yacht_name: document.getElementById("f-yacht-name").value.trim() || null,
     yacht_type: document.getElementById("f-yacht-type").value.trim() || null,
     length_ft: document.getElementById("f-length-ft").value === "" ? null : Number(document.getElementById("f-length-ft").value),
@@ -1086,7 +1086,13 @@ function renderLogList(entries) {
         <span class="log-date">${formatDate(entry.date)}${Number(entry.night_hours) > 0 ? ` <svg class="night-icon" viewBox="0 0 16 16" aria-label="Night hours logged"><title>Night hours logged</title><path fill-rule="evenodd" d="M8,1 A7,7 0 1,0 8,15 A7,7 0 1,0 8,1 Z M5,4 A4,4 0 1,0 5,12 A4,4 0 1,0 5,4 Z"/></svg>` : ""}</span>
         <span class="log-nm">${entry.distance_nm} nm</span>
       </div>
-      <div class="log-route">${escapeHtml(entry.from_location)} → ${escapeHtml(entry.to_location)}</div>
+      ${
+        entry.from_location && entry.to_location
+          ? `<div class="log-route">${escapeHtml(entry.from_location)} → ${escapeHtml(entry.to_location)}</div>`
+          : entry.from_location || entry.to_location
+            ? `<div class="log-route">${escapeHtml(entry.from_location || entry.to_location)}</div>`
+            : ""
+      }
       <div class="log-meta">
         <span class="log-yacht">${escapeHtml(entry.yacht_name || "")}</span>
         <span class="log-role">${escapeHtml(entry.my_role || "")}</span>

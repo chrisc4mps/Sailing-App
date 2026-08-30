@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=60">
+  <link rel="stylesheet" href="style.css?v=61">
 </head>
 <body>
 
@@ -123,17 +123,17 @@
         </div>
 
         <div class="form-row">
-          <label for="f-from">From</label>
+          <label for="f-from">From <span class="optional">(optional)</span></label>
           <div class="autocomplete">
-            <input type="text" id="f-from" required placeholder="e.g. Lymington" autocomplete="off">
+            <input type="text" id="f-from" placeholder="e.g. Lymington" autocomplete="off">
             <ul id="from-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
 
         <div class="form-row">
-          <label for="f-to">To</label>
+          <label for="f-to">To <span class="optional">(optional)</span></label>
           <div class="autocomplete">
-            <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
+            <input type="text" id="f-to" placeholder="e.g. Cherbourg" autocomplete="off">
             <ul id="to-suggestions" class="suggestions" hidden></ul>
           </div>
         </div>
@@ -164,7 +164,7 @@
         <div class="form-row two-col">
           <div>
             <label for="f-duration">Time (hrs) <span class="optional">(optional)</span></label>
-            <input type="number" id="f-duration" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4.5" autocomplete="off">
+            <input type="number" id="f-duration" class="calculated-field" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4.5" autocomplete="off">
           </div>
           <div>
             <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
@@ -179,7 +179,7 @@
 
         <div class="form-row">
           <label for="f-days">Days on board</label>
-          <input type="number" id="f-days" inputmode="numeric" min="1" step="1" value="1" required autocomplete="off">
+          <input type="number" id="f-days" class="calculated-field" inputmode="numeric" min="1" step="1" value="1" required autocomplete="off">
         </div>
 
         <div class="form-row">
@@ -209,11 +209,6 @@
           <div id="crew-chips" class="chips"></div>
         </div>
 
-        <div class="form-row">
-          <label for="f-notes">Notes <span class="optional">(optional)</span></label>
-          <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..." autocomplete="off"></textarea>
-        </div>
-
         <h2 class="form-section-heading">More details</h2>
 
         <div class="form-row">
@@ -223,6 +218,7 @@
             <option value="Cruise">Cruise</option>
             <option value="Race">Race</option>
             <option value="Delivery">Delivery</option>
+            <option value="Course">Course</option>
           </select>
         </div>
 
@@ -274,6 +270,11 @@
         <div class="form-row">
           <label for="f-wind-force">Max wind force (Beaufort) <span class="optional">(optional)</span></label>
           <input type="number" id="f-wind-force" inputmode="numeric" min="0" max="12" step="1" placeholder="e.g. 5" autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <label for="f-notes">Notes <span class="optional">(optional)</span></label>
+          <textarea id="f-notes" rows="3" placeholder="Weather, conditions, anything worth remembering..." autocomplete="off"></textarea>
         </div>
 
       </form>
@@ -349,6 +350,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=60"></script>
+  <script type="module" src="app.js?v=61"></script>
 </body>
 </html>

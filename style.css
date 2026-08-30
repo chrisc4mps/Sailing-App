@@ -582,6 +582,10 @@ input:focus, select:focus, textarea:focus {
   outline-offset: 1px;
 }
 
+.calculated-field {
+  background: #eef1f5;
+}
+
 .autocomplete {
   position: relative;
 }
