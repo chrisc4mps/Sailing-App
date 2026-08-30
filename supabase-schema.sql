@@ -18,7 +18,7 @@ create table if not exists public.logs (
   length_m numeric(4, 2) check (length_m >= 0),
   skipper text,
   crew text[] not null default '{}',
-  my_role text check (my_role in ('Crew', 'Watch Leader', 'Mate', 'Skipper')),
+  my_role text check (my_role in ('Crew', 'Watch Leader', 'First Mate', 'Skipper')),
   max_wind_force smallint check (max_wind_force between 0 and 12),
   distance_nm numeric(6, 1) not null check (distance_nm >= 0),
   duration_hours numeric(5, 1) check (duration_hours >= 0),
