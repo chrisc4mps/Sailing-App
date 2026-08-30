@@ -1,0 +1,185 @@
+:root {
+  --paper: #faf6ec;
+  --ink: #2c2a26;
+  --rule: #c9bfa5;
+  --accent: #7a4b2b;
+  --muted: #8a8272;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--paper);
+  color: var(--ink);
+  background-image: repeating-linear-gradient(
+    var(--paper) 0px,
+    var(--paper) 27px,
+    var(--rule) 28px
+  );
+  background-attachment: local;
+}
+
+.ledger-header {
+  padding: 20px 16px 10px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.ledger-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+}
+
+.totals {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.entry-form {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--rule);
+  padding: 14px;
+  margin-bottom: 20px;
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.field-row--split {
+  flex-direction: row;
+  gap: 10px;
+}
+
+.field-row--split > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+input {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 6px 4px;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+button {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--ink);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.day-group {
+  margin-bottom: 18px;
+}
+
+.day-heading {
+  font-weight: bold;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.day-heading .day-name {
+  font-weight: normal;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.entry-main {
+  flex: 1;
+}
+
+.entry-exercise {
+  font-weight: bold;
+}
+
+.entry-detail {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.entry-notes {
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.entry-actions button {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+  padding: 30px 0;
+}
