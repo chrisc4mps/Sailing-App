@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=57">
+  <link rel="stylesheet" href="style.css?v=58">
 </head>
 <body>
 
@@ -122,10 +122,16 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <label for="f-date">Date</label>
-          <input type="date" id="f-date" required autocomplete="off">
-          <p id="f-date-weekday" class="date-weekday"></p>
+        <div class="form-row two-col">
+          <div>
+            <label for="f-date">Date from</label>
+            <input type="date" id="f-date" required autocomplete="off">
+            <p id="f-date-weekday" class="date-weekday"></p>
+          </div>
+          <div>
+            <label for="f-date-to">Date to <span class="optional">(optional)</span></label>
+            <input type="date" id="f-date-to" autocomplete="off">
+          </div>
         </div>
 
         <div class="form-row two-col">
@@ -334,6 +340,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=57"></script>
+  <script type="module" src="app.js?v=58"></script>
 </body>
 </html>

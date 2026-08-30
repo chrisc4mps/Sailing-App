@@ -574,7 +574,9 @@ function resetForm() {
   renderCrewChips();
   editingId = null;
   document.getElementById("f-date").value = new Date().toISOString().slice(0, 10);
+  document.getElementById("f-date-to").value = "";
   updateDateWeekdayLabel();
+  updateDaysFromDates();
   document.getElementById("gpx-imported-label").hidden = true;
   document.getElementById("share-log-btn").hidden = true;
 }
@@ -586,6 +588,28 @@ addLogBtn.addEventListener("click", () => {
 });
 
 document.getElementById("f-date").addEventListener("input", updateDateWeekdayLabel);
+document.getElementById("f-date").addEventListener("change", updateDaysFromDates);
+document.getElementById("f-date-to").addEventListener("change", updateDaysFromDates);
+
+// Days on board is derived from the date range: a single day (Date to left
+// blank, or equal to Date from) counts as 1 day, spanning multiple calendar
+// days counts each of them. This is a simple day count, not the RYA's
+// distinct "qualifying day" rules.
+function updateDaysFromDates() {
+  const fromVal = document.getElementById("f-date").value;
+  const toVal = document.getElementById("f-date-to").value;
+  if (!fromVal) return;
+
+  if (!toVal) {
+    document.getElementById("f-days").value = 1;
+    return;
+  }
+
+  const fromDate = new Date(`${fromVal}T00:00:00Z`);
+  const toDate = new Date(`${toVal}T00:00:00Z`);
+  const diffDays = Math.round((toDate - fromDate) / 86400000) + 1;
+  document.getElementById("f-days").value = diffDays >= 1 ? diffDays : 1;
+}
 
 document.getElementById("f-role").addEventListener("change", (e) => {
   if (e.target.value !== "Skipper" || !currentUserFullName) return;
@@ -610,6 +634,7 @@ function openEntry(entry) {
   document.getElementById("f-gpx-filename").value = entry.gpx_filename || "";
   document.getElementById("share-log-btn").hidden = false;
   document.getElementById("f-date").value = entry.date;
+  document.getElementById("f-date-to").value = entry.date_to || "";
   updateDateWeekdayLabel();
   document.getElementById("f-start-time").value = (entry.start_time || "").slice(0, 5);
   document.getElementById("f-end-time").value = (entry.end_time || "").slice(0, 5);
@@ -642,6 +667,7 @@ const shareLogBtn = document.getElementById("share-log-btn");
 shareLogBtn.addEventListener("click", () => {
   const payload = {
     date: document.getElementById("f-date").value || null,
+    date_to: document.getElementById("f-date-to").value || null,
     start_time: document.getElementById("f-start-time").value || null,
     end_time: document.getElementById("f-end-time").value || null,
     type: document.getElementById("f-type").value || null,
@@ -683,7 +709,9 @@ function applyPendingSharedLogIfAny() {
   resetForm();
 
   if (data.date) document.getElementById("f-date").value = data.date;
+  if (data.date_to) document.getElementById("f-date-to").value = data.date_to;
   updateDateWeekdayLabel();
+  updateDaysFromDates();
   if (data.start_time) document.getElementById("f-start-time").value = data.start_time;
   if (data.end_time) document.getElementById("f-end-time").value = data.end_time;
   if (data.type) document.getElementById("f-type").value = data.type;
@@ -720,6 +748,7 @@ entryForm.addEventListener("submit", async (e) => {
 
   const record = {
     date: document.getElementById("f-date").value,
+    date_to: document.getElementById("f-date-to").value || null,
     start_time: document.getElementById("f-start-time").value || null,
     end_time: document.getElementById("f-end-time").value || null,
     trip_name: document.getElementById("f-trip-name").value.trim() || null,
@@ -847,12 +876,15 @@ gpxFileInput.addEventListener("change", async () => {
 
     if (firstTime) {
       document.getElementById("f-date").value = formatDateForInput(firstTime);
-      updateDateWeekdayLabel();
       document.getElementById("f-start-time").value = formatTimeForInput(firstTime);
     }
     if (lastTime) {
       document.getElementById("f-end-time").value = formatTimeForInput(lastTime);
+      const lastDate = formatDateForInput(lastTime);
+      document.getElementById("f-date-to").value = lastDate !== document.getElementById("f-date").value ? lastDate : "";
     }
+    updateDateWeekdayLabel();
+    updateDaysFromDates();
     calculateDuration();
     document.getElementById("f-distance").value = totalNm.toFixed(1);
 
