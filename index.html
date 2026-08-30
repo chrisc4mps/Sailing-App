@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=56">
+  <link rel="stylesheet" href="style.css?v=57">
 </head>
 <body>
 
@@ -107,14 +107,6 @@
       </header>
 
       <form id="entry-form" autocomplete="off">
-        <div class="form-row">
-          <label for="f-trip-name">Trip name <span class="optional">(optional)</span></label>
-          <div class="autocomplete">
-            <input type="text" id="f-trip-name" placeholder="e.g. August Bank Holiday" autocomplete="off">
-            <ul id="trip-name-suggestions" class="suggestions" hidden></ul>
-          </div>
-        </div>
-
         <div class="gpx-import">
           <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
           <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
@@ -123,9 +115,49 @@
         </div>
 
         <div class="form-row">
+          <label for="f-trip-name">Trip name <span class="optional">(optional)</span></label>
+          <div class="autocomplete">
+            <input type="text" id="f-trip-name" placeholder="e.g. August Bank Holiday" autocomplete="off">
+            <ul id="trip-name-suggestions" class="suggestions" hidden></ul>
+          </div>
+        </div>
+
+        <div class="form-row">
           <label for="f-date">Date</label>
           <input type="date" id="f-date" required autocomplete="off">
           <p id="f-date-weekday" class="date-weekday"></p>
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-start-time">Start time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-start-time" autocomplete="off">
+          </div>
+          <div>
+            <label for="f-end-time">End time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-end-time" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-duration">Time (hrs) <span class="optional">(optional)</span></label>
+            <input type="number" id="f-duration" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4.5" autocomplete="off">
+          </div>
+          <div>
+            <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
+            <input type="number" id="f-night-hours" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="f-distance">Distance (nm)</label>
+          <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62" autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <label for="f-days">Days on board</label>
+          <input type="number" id="f-days" inputmode="numeric" min="1" step="1" value="1" required autocomplete="off">
         </div>
 
         <div class="form-row">
@@ -141,38 +173,6 @@
           <div class="autocomplete">
             <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
             <ul id="to-suggestions" class="suggestions" hidden></ul>
-          </div>
-        </div>
-
-        <div class="form-row two-col">
-          <div>
-            <label for="f-start-time">Start time <span class="optional">(optional)</span></label>
-            <input type="time" id="f-start-time" autocomplete="off">
-          </div>
-          <div>
-            <label for="f-end-time">End time <span class="optional">(optional)</span></label>
-            <input type="time" id="f-end-time" autocomplete="off">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="f-distance">Distance (nm)</label>
-          <input type="number" id="f-distance" inputmode="decimal" min="0" step="0.1" required placeholder="e.g. 62" autocomplete="off">
-        </div>
-
-        <div class="form-row">
-          <label for="f-days">Days on board</label>
-          <input type="number" id="f-days" inputmode="numeric" min="1" step="1" value="1" required autocomplete="off">
-        </div>
-
-        <div class="form-row two-col">
-          <div>
-            <label for="f-duration">Time (hrs) <span class="optional">(optional)</span></label>
-            <input type="number" id="f-duration" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4.5" autocomplete="off">
-          </div>
-          <div>
-            <label for="f-night-hours">Night hours <span class="optional">(optional)</span></label>
-            <input type="number" id="f-night-hours" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4" autocomplete="off">
           </div>
         </div>
 
@@ -334,6 +334,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=56"></script>
+  <script type="module" src="app.js?v=57"></script>
 </body>
 </html>
