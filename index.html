@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="Logbook">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="style.css?v=55">
+  <link rel="stylesheet" href="style.css?v=56">
 </head>
 <body>
 
@@ -107,6 +107,14 @@
       </header>
 
       <form id="entry-form" autocomplete="off">
+        <div class="form-row">
+          <label for="f-trip-name">Trip name <span class="optional">(optional)</span></label>
+          <div class="autocomplete">
+            <input type="text" id="f-trip-name" placeholder="e.g. August Bank Holiday" autocomplete="off">
+            <ul id="trip-name-suggestions" class="suggestions" hidden></ul>
+          </div>
+        </div>
+
         <div class="gpx-import">
           <button type="button" id="gpx-import-btn" class="link-button">Import from GPX file</button>
           <input type="file" id="gpx-file-input" accept=".gpx,application/gpx+xml" hidden>
@@ -118,17 +126,6 @@
           <label for="f-date">Date</label>
           <input type="date" id="f-date" required autocomplete="off">
           <p id="f-date-weekday" class="date-weekday"></p>
-        </div>
-
-        <div class="form-row two-col">
-          <div>
-            <label for="f-start-time">Start time <span class="optional">(optional)</span></label>
-            <input type="time" id="f-start-time" autocomplete="off">
-          </div>
-          <div>
-            <label for="f-end-time">End time <span class="optional">(optional)</span></label>
-            <input type="time" id="f-end-time" autocomplete="off">
-          </div>
         </div>
 
         <div class="form-row">
@@ -144,6 +141,17 @@
           <div class="autocomplete">
             <input type="text" id="f-to" required placeholder="e.g. Cherbourg" autocomplete="off">
             <ul id="to-suggestions" class="suggestions" hidden></ul>
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div>
+            <label for="f-start-time">Start time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-start-time" autocomplete="off">
+          </div>
+          <div>
+            <label for="f-end-time">End time <span class="optional">(optional)</span></label>
+            <input type="time" id="f-end-time" autocomplete="off">
           </div>
         </div>
 
@@ -201,14 +209,6 @@
         </div>
 
         <h2 class="form-section-heading">More details</h2>
-
-        <div class="form-row">
-          <label for="f-trip-name">Trip name <span class="optional">(optional)</span></label>
-          <div class="autocomplete">
-            <input type="text" id="f-trip-name" placeholder="e.g. August Bank Holiday" autocomplete="off">
-            <ul id="trip-name-suggestions" class="suggestions" hidden></ul>
-          </div>
-        </div>
 
         <div class="form-row">
           <label for="f-type">Type <span class="optional">(optional)</span></label>
@@ -334,6 +334,6 @@
 
   <script src="vendor/supabase.js"></script>
   <script src="vendor/qrcode.js"></script>
-  <script type="module" src="app.js?v=55"></script>
+  <script type="module" src="app.js?v=56"></script>
 </body>
 </html>
