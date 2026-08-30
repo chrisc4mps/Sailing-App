@@ -781,30 +781,6 @@ function parseGpx(xmlText) {
     .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
 }
 
-// Rough estimate only: classifies each track segment as "night" using a
-// fixed 21:00-06:00 window in local mean solar time (UTC + longitude/15
-// hours), not true sunrise/sunset - a reasonable rule of thumb, not
-// astronomy. Always reviewable/editable before saving.
-function estimateNightHours(points) {
-  let nightMs = 0;
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    if (!prev.time || !curr.time) continue;
-    const segMs = curr.time - prev.time;
-    if (segMs <= 0) continue;
-
-    const midMs = (prev.time.getTime() + curr.time.getTime()) / 2;
-    const midDate = new Date(midMs);
-    const lonOffsetHours = curr.lon / 15;
-    const localHour =
-      (((midDate.getUTCHours() + midDate.getUTCMinutes() / 60 + lonOffsetHours) % 24) + 24) % 24;
-
-    if (localHour >= 21 || localHour < 6) nightMs += segMs;
-  }
-  return nightMs / 3600000;
-}
-
 function formatDateForInput(date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -863,11 +839,6 @@ gpxFileInput.addEventListener("change", async () => {
     }
     calculateDuration();
     document.getElementById("f-distance").value = totalNm.toFixed(1);
-
-    const nightHours = estimateNightHours(points);
-    if (nightHours > 0) {
-      document.getElementById("f-night-hours").value = nightHours.toFixed(1);
-    }
 
     const importedLabel = document.getElementById("gpx-imported-label");
     importedLabel.textContent = `Imported from: ${file.name}`;
