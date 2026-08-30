@@ -1083,7 +1083,7 @@ function renderLogList(entries) {
     card.className = "log-card";
     card.innerHTML = `
       <div class="log-card-top">
-        <span class="log-date">${formatDate(entry.date)}${Number(entry.night_hours) > 0 ? ` <svg class="night-icon" viewBox="0 0 16 16" aria-label="Night hours logged"><title>Night hours logged</title><path fill-rule="evenodd" d="M8,1 A7,7 0 1,0 8,15 A7,7 0 1,0 8,1 Z M5,4 A4,4 0 1,0 5,12 A4,4 0 1,0 5,4 Z"/></svg>` : ""}</span>
+        <span class="log-date">${formatDate(entry.date)}${Number(entry.night_hours) > 0 ? ` <svg class="night-icon" viewBox="0 0 16 16" aria-label="Night hours logged"><title>Night hours logged</title><path fill-rule="evenodd" d="M8,1 A7,7 0 1,0 8,15 A7,7 0 1,0 8,1 Z M5,4 A4,4 0 1,0 5,12 A4,4 0 1,0 5,4 Z"/></svg>` : ""}${entry.waters ? ` <span class="waters-badge ${entry.waters === "Tidal" ? "tidal" : "non-tidal"}">${escapeHtml(entry.waters)}</span>` : ""}</span>
         <span class="log-nm">${entry.distance_nm} nm</span>
       </div>
       ${

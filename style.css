@@ -311,6 +311,25 @@ input, select, textarea {
   vertical-align: -0.05em;
 }
 
+.waters-badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.waters-badge.tidal {
+  background: #dbe7f5;
+  color: var(--navy);
+}
+
+.waters-badge.non-tidal {
+  background: #eef1f5;
+  color: var(--navy-muted);
+}
+
 .log-route {
   font-weight: 700;
   font-size: 1.05rem;
