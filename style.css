@@ -230,11 +230,32 @@ input, select, textarea {
   color: #fff;
 }
 
+.stat-hero {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-hero .stat-value {
+  font-size: 3rem;
+  color: #fff;
+}
+
+.stat-hero .stat-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+}
+
 .totals-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 0 1rem 1rem;
 }
 
 .stat-tile {
