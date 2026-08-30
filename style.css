@@ -280,6 +280,10 @@ input, select, textarea {
   color: var(--navy-muted);
 }
 
+.night-icon {
+  font-size: 0.8rem;
+}
+
 .log-route {
   font-weight: 700;
   font-size: 1.05rem;

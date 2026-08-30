@@ -1011,7 +1011,7 @@ function renderLogList(entries) {
     card.className = "log-card";
     card.innerHTML = `
       <div class="log-card-top">
-        <span class="log-date">${formatDate(entry.date)}</span>
+        <span class="log-date">${formatDate(entry.date)}${Number(entry.night_hours) > 0 ? ` <span class="night-icon" title="Night hours logged">🌙</span>` : ""}</span>
         <span class="log-nm">${entry.distance_nm} nm</span>
       </div>
       <div class="log-route">${escapeHtml(entry.from_location)} → ${escapeHtml(entry.to_location)}</div>
